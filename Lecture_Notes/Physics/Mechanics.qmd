@@ -1408,9 +1408,9 @@ This principle allows for elegant solutions to motion problems without explicitl
 #### Gravity example
 
 $$
-m\frac{m v_1^2}{2}-\frac{G m M}{r_1} 
+\frac{m v_1^2}{2}-\frac{G m M}{r_1} 
 =
-m\frac{m v_2^2}{2}-\frac{G m M}{r_2}
+\frac{m v_2^2}{2}-\frac{G m M}{r_2}
 $$
 
 
