@@ -1,0 +1,304 @@
+---
+title: Gravity
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 3
+    highlight-style: tango
+    code-line-numbers: true
+    code-fold: true
+    code-summary: "Show the code"
+    code-tools: true
+    code-block-bg: "rgba(42, 174, 42, 0.02)"
+    code-block-border-left: "#2aae2a"
+    code-language-label: true
+    css: styles.css
+    math: mathjax
+    self-contained: true
+    other-links:
+      - text: Main page
+        href: https://dchorazkiewicz.github.io/Mathematics_Physics_Lectures   
+
+---
+
+## Newton Gravity
+
+Let us consider a particle of mass $m$ at a distance $r$ from a point mass $M$. The gravitational force acting on the particle is given by Newton's law of gravitation:
+
+$$
+\begin{aligned}
+\frac{d^2x}{dt^2} &= -\frac{GM}{r^2} \hat{r},\\
+\frac{d^2y}{dt^2} &= -\frac{GM}{r^2} \hat{y},\\
+\frac{d^2z}{dt^2} &= -\frac{GM}{r^2} \hat{z},
+\end{aligned}
+$$
+
+
+where $G$ is the gravitational constant. The force is directed towards the point mass $M$.
+
+Because of central symmetry, we will simplify the problem by considering the motion in the $xy$ plane. The equations of motion are then:
+
+$$
+\begin{aligned}
+\frac{d^2x}{dt^2} &= -\frac{GM}{r^2}\\
+\frac{d^2y}{dt^2} &= -\frac{GM}{r^2},
+\end{aligned}
+$$
+
+where $r = \sqrt{x^2 + y^2}$.
+
+This is a system of two second-order ordinary differential equations. It has an analytical solution, but we will solve it numerically to have access to visualizations.
+
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+# Constants
+G = 6.67430e-11  # gravitational constant [m^3 kg^-1 s^-2]
+M = 5.972e24     # mass of Earth [kg]
+R_earth = 6.371e6  # Earth's radius [m]
+
+# Function defining the system of differential equations
+def gravity_equations(state, t):
+    x, y, vx, vy = state  # state: position (x, y) and velocity (vx, vy)
+    r = np.sqrt(x**2 + y**2)  # distance from the center
+    
+    # Check if the particle hits Earth's surface
+    if r <= R_earth:
+        return [0, 0, 0, 0]  # Stop motion (velocity and acceleration become zero)
+    
+    ax = -G * M * x / r**3  # acceleration in x-axis
+    ay = -G * M * y / r**3  # acceleration in y-axis
+    return [vx, vy, ax, ay]  # [dx/dt, dy/dt, dvx/dt, dvy/dt]
+
+# Function to plot trajectories with a filled Earth
+def plot_trajectories(initial_conditions_list, t_max=1000, num_points=1000):
+    """
+    initial_conditions_list: list of tuples [(x0, y0, vx0, vy0), ...] - initial conditions
+    t_max: maximum simulation time [s]
+    num_points: number of points in the trajectory
+    """
+    # Simulation time
+    t = np.linspace(0, t_max, num_points)
+    
+    # Initialize the plot
+    plt.figure(figsize=(10, 10))
+    
+    # Plot Earth's surface as a filled circle
+    theta = np.linspace(0, 2 * np.pi, 100)
+    x_earth = R_earth * np.cos(theta)
+    y_earth = R_earth * np.sin(theta)
+    plt.fill(x_earth, y_earth, 'b', label="Earth", alpha=0.5)  # Filled Earth with transparency
+    
+    # Plot trajectories for each tuple of initial conditions
+    for i, conditions in enumerate(initial_conditions_list):
+        # Numerical solution of differential equations
+        solution = odeint(gravity_equations, conditions, t, tcrit=t)
+        
+        # Extract x and y positions
+        x = solution[:, 0]
+        y = solution[:, 1]
+        
+        # Stop plotting when hitting Earth's surface
+        mask = np.sqrt(x**2 + y**2) >= R_earth
+        x = x[mask]
+        y = y[mask]
+        
+        # Plot trajectory with label
+        plt.plot(x, y, label=f"Trajectory {i+1}", linewidth=2)
+    
+    # Central mass point (M)
+    plt.plot(0, 0, 'yo', label="Center of Earth")
+    
+    # Plot settings
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("Trajectories in a Gravitational Field with Filled Earth")
+    plt.legend()
+    plt.grid(True)
+    plt.axis("equal")  # equal axis scales
+    plt.show()
+
+
+```
+
+### Case 1
+
+```{python}
+# Example list of tuples with initial conditions (starting above Earth's surface)
+initial_conditions_list = [
+    (R_earth + 1e6, 0, 0, 3000),
+    (R_earth + 1e6, 0, 0, 4000),
+    (R_earth + 1e6, 0, 0, 5000),
+    (R_earth + 1e6, 0, 0, 6000),
+    (R_earth + 1e6, 0, 0, 7000),
+    (R_earth + 1e6, 0, 0, 8000),     
+]
+
+# Call the function
+plot_trajectories(initial_conditions_list, t_max=20000, num_points=10000)
+```
+
+### Case 2
+
+```{python}
+# Example list of tuples with initial conditions (starting above Earth's surface)
+initial_conditions_list = [
+    (R_earth + 1e6, 0, 0, 9000),
+    (R_earth + 1e6, 0, 0, 9100),
+    (R_earth + 1e6, 0, 0, 9200),
+    (R_earth + 1e6, 0, 0, 9300),
+    (R_earth + 1e6, 0, 0, 9400),
+    (R_earth + 1e6, 0, 0, 9500),
+    (R_earth + 1e6, 0, 0, 9600),
+    (R_earth + 1e6, 0, 0, 9700),
+    (R_earth + 1e6, 0, 0, 9800),
+    (R_earth + 1e6, 0, 0, 9900),
+    (R_earth + 1e6, 0, 0, 10000),
+]
+# Call the function
+plot_trajectories(initial_conditions_list, t_max=100000, num_points=20000)
+```
+
+
+### Case 3
+
+
+```{python}
+# Example list of tuples with initial conditions (starting above Earth's surface)
+initial_conditions_list = [
+    (R_earth + 1e6, 0, 0, 10400),
+    (R_earth + 1e6, 0, 0, 10500),
+    (R_earth + 1e6, 0, 0, 10600),
+    (R_earth + 1e6, 0, 0, 10700),
+    (R_earth + 1e6, 0, 0, 10800),
+    (R_earth + 1e6, 0, 0, 10900),
+    (R_earth + 1e6, 0, 0, 11000),
+    (R_earth + 1e6, 0, 0, 11100),
+]
+# Call the function
+plot_trajectories(initial_conditions_list, t_max=100000, num_points=20000)
+```
+
+## Earth & Moon system
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+# Constants
+G = 6.67430e-11  # gravitational constant [m^3 kg^-1 s^-2]
+M_earth = 5.972e24  # mass of Earth [kg]
+M_moon = 7.342e22  # mass of Moon [kg]
+R_earth = 6.371e6  # Earth's radius [m]
+R_moon = 1.737e6   # Moon's radius [m]
+d_earth_moon = 3.844e8  # average Earth-Moon distance [m]
+
+# Moon's orbital velocity (circular orbit approximation)
+v_moon = np.sqrt(G * M_earth / d_earth_moon)  # [m/s]
+
+# Function defining the system of differential equations
+def gravity_equations(state, t):
+    # State: [x_s, y_s, vx_s, vy_s, x_m, y_m, vx_m, vy_m]
+    # Small body and Moon positions and velocities (Earth fixed at origin)
+    x_s, y_s, vx_s, vy_s, x_m, y_m, vx_m, vy_m = state
+    
+    # Distances
+    r_es = np.sqrt(x_s**2 + y_s**2)  # Earth-small body distance
+    r_em = np.sqrt(x_m**2 + y_m**2)  # Earth-Moon distance
+    r_ms = np.sqrt((x_s - x_m)**2 + (y_s - y_m)**2)  # Moon-small body distance
+    
+    # Stop if small body hits Earth or Moon
+    if r_es <= R_earth or r_ms <= R_moon:
+        return [0] * 8  # Stop motion
+    
+    # Accelerations on Moon due to Earth
+    ax_m = -G * M_earth * x_m / r_em**3
+    ay_m = -G * M_earth * y_m / r_em**3
+    
+    # Accelerations on small body due to Earth and Moon
+    ax_s_e = -G * M_earth * x_s / r_es**3  # from Earth
+    ay_s_e = -G * M_earth * y_s / r_es**3
+    ax_s_m = -G * M_moon * (x_s - x_m) / r_ms**3  # from Moon
+    ay_s_m = -G * M_moon * (y_s - y_m) / r_ms**3
+    
+    # Total acceleration on small body
+    ax_s = ax_s_e + ax_s_m
+    ay_s = ay_s_e + ay_s_m
+    
+    return [vx_s, vy_s, ax_s, ay_s,  # Small body
+            vx_m, vy_m, ax_m, ay_m]  # Moon
+
+# Function to plot trajectories
+def plot_trajectories(initial_conditions_list, t_max=1e5, num_points=10000):
+    """
+    initial_conditions_list: list of tuples [(x_s0, y_s0, vx_s0, vy_s0), ...]
+    t_max: maximum simulation time [s]
+    num_points: number of points in the trajectory
+    """
+    t = np.linspace(0, t_max, num_points)
+    
+    # Moon's initial conditions (same for all trajectories)
+    moon_initial = [d_earth_moon, 0, 0, v_moon]  # [x_m0, y_m0, vx_m0, vy_m0]
+    
+    # Plot
+    plt.figure(figsize=(12, 12))
+    
+    # Earth (filled circle)
+    theta = np.linspace(0, 2 * np.pi, 100)
+    plt.fill(R_earth * np.cos(theta), R_earth * np.sin(theta), 'b', label="Earth", alpha=0.5)
+    
+    # Plot each small body trajectory
+    for i, small_body_initial in enumerate(initial_conditions_list):
+        # Combine initial conditions: [x_s0, y_s0, vx_s0, vy_s0, x_m0, y_m0, vx_m0, vy_m0]
+        initial_conditions = list(small_body_initial) + moon_initial
+        
+        # Solve the system
+        solution = odeint(gravity_equations, initial_conditions, t, tcrit=t)
+        
+        # Extract positions
+        x_s, y_s = solution[:, 0], solution[:, 1]
+        x_m, y_m = solution[:, 4], solution[:, 5]
+        
+        # Stop plotting when hitting Earth or Moon
+        r_es = np.sqrt(x_s**2 + y_s**2)
+        r_ms = np.sqrt((x_s - x_m)**2 + (y_s - y_m)**2)
+        mask = (r_es >= R_earth) & (r_ms >= R_moon)
+        x_s = x_s[mask]
+        y_s = y_s[mask]
+        x_m = x_m[mask]
+        y_m = y_m[mask]
+        
+        # Plot Moon's orbit and final position
+        if i == 0:  # Plot Moon's orbit only once
+            plt.plot(x_m, y_m, 'red', label="Moon orbit")
+        plt.fill(x_m[-1] + R_moon * np.cos(theta), y_m[-1] + R_moon * np.sin(theta), 'gray', label="Moon" if i == 0 else "", alpha=0.5)
+        
+        # Plot small body trajectory
+        plt.plot(x_s, y_s, label=f"Small body {i+1}", linewidth=2)
+    
+    # Settings
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("Small Bodies in Earth-Moon System")
+    plt.legend()
+    plt.grid(True)
+    plt.axis("equal")
+    plt.show()
+
+
+```
+
+```{python}
+# Initial conditions for small bodies: list of [x_s0, y_s0, vx_s0, vy_s0]
+initial_conditions_list = [
+    (R_earth + 4e8, 0, 0, 100)
+]
+
+# Run simulation
+plot_trajectories(initial_conditions_list, t_max=1e7, num_points=500000)
+```
