@@ -1,0 +1,212 @@
+---
+title: Gravitional Pendulum
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 3
+    highlight-style: tango
+    code-line-numbers: true
+    code-fold: true
+    code-summary: "Show the code"
+    code-tools: true
+    code-block-bg: "rgba(42, 174, 42, 0.02)"
+    code-block-border-left: "#2aae2a"
+    code-language-label: true
+    css: styles.css
+    math: mathjax
+    self-contained: true
+    other-links:
+      - text: Main page
+        href: https://dchorazkiewicz.github.io/Mathematics_Physics_Lectures   
+
+---
+
+## Equations of motion
+
+$$
+\frac{d^2\theta}{dt^2}+2b\frac{d\theta}{dt}+\frac{g}{l}\sin(\theta) = A\cos(\omega t)
+$$
+
+where 
+
+- $b$ is the damping coefficient
+- $g$ is the acceleration due to gravity
+- $l$ is the length of the pendulum
+- $A$ is the amplitude of the driving force
+- $\omega$ is the frequency of the driving force
+
+## Numerical solution
+
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+# Global parameter (same for all pendulums)
+g = 9.81  # gravitational acceleration [m/s^2]
+
+# Function defining the system of differential equations
+def pendulum_equations(state, t, g, l, b, A, omega):
+    """
+    Defines the system of equations for the pendulum:
+    d^2θ/dt^2 + 2b * dθ/dt + (g/l) * sin(θ) = A * cos(ωt)
+    
+    Parameters:
+    - g: gravitational acceleration [m/s^2]
+    - l: length of the pendulum [m]
+    - b: damping coefficient [s^-1]
+    - A: amplitude of the driving force [rad/s^2]
+    - omega: frequency of the driving force [rad/s]
+    """
+    theta, dtheta_dt = state  # state: [θ, dθ/dt]
+    
+    # First equation: dθ/dt = dtheta_dt
+    # Second equation: d(dθ/dt)/dt = -2b * dθ/dt - (g/l) * sin(θ) + A * cos(ωt)
+    d2theta_dt2 = -2 * b * dtheta_dt - (g / l) * np.sin(theta) + A * np.cos(omega * t)
+    
+    return [dtheta_dt, d2theta_dt2]
+
+# Function to plot time evolution and phase space
+def plot_pendulum_evolution(initial_conditions_list, t_max, num_points):
+    """
+    Parameters:
+    - initial_conditions_list: list of tuples [(theta0, dtheta0_dt, b, l, A, omega), ...]
+      - theta0: initial angle [rad]
+      - dtheta0_dt: initial angular velocity [rad/s]
+      - b: damping coefficient [s^-1]
+      - l: length of the pendulum [m]
+      - A: amplitude of the driving force [rad/s^2]
+      - omega: frequency of the driving force [rad/s]
+    - t_max: maximum simulation time [s]
+    - num_points: number of points in the trajectory
+    """
+    # Time array for the simulation
+    t = np.linspace(0, t_max, num_points)
+    
+    # Create a figure with two subplots: time evolution and phase space
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+    
+    # Plot time evolution (θ vs. time) on the left
+    for i, (theta0, dtheta0_dt, b, l, A, omega) in enumerate(initial_conditions_list):
+        # Initial state: [θ0, dθ/dt0]
+        state0 = [theta0, dtheta0_dt]
+        
+        # Solve the system of differential equations
+        solution = odeint(pendulum_equations, state0, t, args=(g, l, b, A, omega))
+        
+        # Extract theta and dtheta/dt
+        theta = solution[:, 0]
+        dtheta_dt = solution[:, 1]
+        
+        # Plot θ vs. time
+        ax1.plot(t, theta, label=f"θ0={theta0:.2f}, dθ/dt0={dtheta0_dt:.2f}, b={b:.2f}, l={l:.2f}, A={A:.2f}, ω={omega:.2f}")
+        
+        # Plot phase space (θ vs. dθ/dt)
+        ax2.plot(theta, dtheta_dt, label=f"θ0={theta0:.2f}, dθ/dt0={dtheta0_dt:.2f}, b={b:.2f}, l={l:.2f}, A={A:.2f}, ω={omega:.2f}")
+    
+    # Settings for time evolution plot (θ vs. t)
+    ax1.set_xlabel("Time [s]")
+    ax1.set_ylabel("θ [rad]")
+    ax1.set_title("Time Evolution of Pendulum Angle (θ vs. t)")
+    ax1.legend()
+    ax1.grid(True)
+    
+    # Settings for phase space plot (θ vs. dθ/dt)
+    ax2.set_xlabel("θ [rad]")
+    ax2.set_ylabel("dθ/dt [rad/s]")
+    ax2.set_title("Phase Space (θ vs. dθ/dt)")
+    ax2.legend()
+    ax2.grid(True)
+    
+    # Adjust layout and show plot
+    plt.tight_layout()
+    plt.show()
+```
+
+```{python}
+# Example list of initial conditions: [(theta0, dtheta0_dt, b, l, A, omega), ...]
+initial_conditions_list = [
+    (np.pi/4, 0, 0.1, 1.0, 0.0, 1.0),    # θ0=π/4, dθ/dt0=0, b=0.1, l=1.0, A=0.0, ω=1.0
+    (np.pi/2, 0, 0.0, 1.0, 0.0, 1.0),    # θ0=π/2, dθ/dt0=0, b=0.0 (no damping), l=1.0, A=0.0, ω=1.0
+    (np.pi/4, 2.0, 0.1, 2.0, 0.5, 2.0),  # θ0=π/4, dθ/dt0=2.0, b=0.1, l=2.0, A=0.5 (driving), ω=2.0
+    (0, 3.0, 0.2, 0.5, 0.0, 1.0),        # θ0=0, dθ/dt0=3.0, b=0.2, l=0.5, A=0.0, ω=1.0
+]
+
+# Run the simulation with explicitly labeled arguments
+plot_pendulum_evolution(
+    initial_conditions_list=initial_conditions_list,  # List of initial conditions and parameters
+    t_max=20,                                         # Maximum simulation time in seconds
+    num_points=1000                                   # Number of time steps for the simulation
+)
+```
+
+## Case 1
+
+We will consider a pendulum with the following parameters:
+
+- $b=0$ (no damping)
+- $l=1$ m (length of the pendulum)
+- $A=0$ (no driving force)
+
+```{python}
+# Initial conditions for the pendulum: list of [(theta0, dtheta0_dt, b, l, A, omega), ...]
+initial_conditions_list = [
+    (np.pi/8, 0, 0.0, 1.0, 0.0, 0.0),
+    (np.pi/4, 0, 0.0, 1.0, 0.0, 0.0),
+    (np.pi/3, 0, 0.0, 1.0, 0.0, 0.0),
+    (np.pi/2, 0, 0.0, 1.0, 0.0, 0.0),
+]
+plot_pendulum_evolution(initial_conditions_list, t_max=10, num_points=1000)
+```
+
+## Case 2
+
+We will add dumping to the pendulum:
+
+```{python}
+# Initial conditions for the pendulum: list of [(theta0, dtheta0_dt, b, l, A, omega), ...]
+initial_conditions_list = [
+    (np.pi/2, 0, 0.1, 1.0, 0.0, 0.0),
+    (np.pi/2, 0, 0.2, 1.0, 0.0, 0.0),
+    (np.pi/2, 0, 0.3, 1.0, 0.0, 0.0),
+    (np.pi/2, 0, 0.4, 1.0, 0.0, 0.0),
+]
+
+plot_pendulum_evolution(initial_conditions_list, t_max=20, num_points=1000)
+```
+
+## Case 3
+
+Now we will see how the pendulum behaves when a driving force is applied:
+
+### Subcase 1
+
+Changing the amplitude of the driving force:
+
+```{python}
+# Initial conditions for the pendulum: list of [(theta0, dtheta0_dt, b, l, A, omega), ...]
+initial_conditions_list = [
+    (np.pi/4, 0, 0.0, 1.0, 1.0, 1.0),
+    (np.pi/4, 0, 0.0, 1.0, 3.0, 1.0),
+    (np.pi/4, 0, 0.0, 1.0, 5.0, 1.0),
+]
+
+plot_pendulum_evolution(initial_conditions_list, t_max=20, num_points=1000)
+```
+
+### Subcase 2
+
+Changing the frequency of the driving force:
+
+```{python}
+# Initial conditions for the pendulum: list of [(theta0, dtheta0_dt, b, l, A, omega), ...]
+initial_conditions_list = [
+    (np.pi/4, 0, 0.0, 1.0, 1.0, 1.0),
+    (np.pi/4, 0, 0.0, 1.0, 1.0, 2.0),
+    (np.pi/4, 0, 0.0, 1.0, 1.0, 3.0),
+]
+
+plot_pendulum_evolution(initial_conditions_list, t_max=50, num_points=1000)
+```
