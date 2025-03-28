@@ -23,8 +23,6 @@ format:
 
 ## Electrostatics
 
-
-
 ### Coulomb's Law
 
 In 1785, Charles-Augustin de Coulomb formulated the law that describes the force between two electrically charged particles. This foundational principle quantifies the interaction between charged objects and laid the groundwork for the study of electrostatics.
@@ -37,4 +35,290 @@ $$
 \mathbf{F} = \frac{1}{4\pi\epsilon_0}\frac{qQ}{|\mathbf{r}-\mathbf{r}'|^3}(\mathbf{r}-\mathbf{r}')
 $$
 
+where:
+
+- $\mathbf{F}$ is the force vector acting on charge $Q$,
+- $\epsilon_0$ is the permittivity of free space.
+- $q$ is the charge of the first particle,
+- $Q$ is the charge of the second particle,
+- $\mathbf{r}$ is the position vector of charge $Q$,
+- $\mathbf{r}'$ is the position vector of charge $q$,
+- $|\mathbf{r}-\mathbf{r}'|$ is the distance between the two charges,
+
+
 where $\epsilon_0$ is the vacuum permittivity.
+It is ease to observe that the force is attractive if the charges are of opposite sign and repulsive if they are of the same sign. Secondly, the force has same structure as the gravitational force, which is given by
+
+$$
+\mathbf{F} = -\frac{GMm}{|\mathbf{r}-\mathbf{r}'|^3}(\mathbf{r}-\mathbf{r}')
+$$
+
+where:
+
+- $\mathbf{F}$ is the gravitational force vector acting on mass $m$,
+- $G$ is the gravitational constant,
+- $M$ is the mass of the first particle,
+- $m$ is the mass of the second particle,
+- $\mathbf{r}$ is the position vector of mass $m$,
+- $\mathbf{r}'$ is the position vector of mass $M$,
+- $|\mathbf{r}-\mathbf{r}'|$ is the distance between the two masses.
+
+
+### Electric Field
+
+The electric field $\mathbf{E}$ is a vector field that describes the force per unit charge experienced by a positive test charge placed in the vicinity of other charges. The electric field due to a point charge $q$ at a position $\mathbf{r}'$ is given by:
+
+$$
+\mathbf{E}(\mathbf{r}) = \frac{1}{4\pi\epsilon_0}\frac{q}{|\mathbf{r}-\mathbf{r}'|^3}(\mathbf{r}-\mathbf{r}')
+$$
+
+#### Superposition Principle
+
+The electric field due to multiple point charges can be calculated using the superposition principle. The total electric field $\mathbf{E}_{\text{total}}$ at a point $\mathbf{r}$ due to a set of point charges $q_1, q_2, \ldots, q_n$ located at positions $\mathbf{r}_1, \mathbf{r}_2, \ldots, \mathbf{r}_n$ is given by:
+
+$$
+\mathbf{E}_{\text{total}}(\mathbf{r}) = \sum_{i=1}^{n} \mathbf{E}_i(\mathbf{r}) = \sum_{i=1}^{n} \frac{1}{4\pi\epsilon_0}\frac{q_i}{|\mathbf{r}-\mathbf{r}_i|^3}(\mathbf{r}-\mathbf{r}_i)
+$$
+
+where $\mathbf{E}_i(\mathbf{r})$ is the electric field due to the $i$-th charge at position $\mathbf{r}_i$. If charge $Q$ is placed at position $\mathbf{r}$, the force acting on it due to the electric field is given by:
+
+$$
+\mathbf{F} = Q \cdot \mathbf{E}_{\text{total}}(\mathbf{r})
+$$
+
+## Continuous Charge Distribution
+
+In many practical situations, charges are distributed over a volume, surface, or line rather than being concentrated at discrete points. In such cases, we can define charge density functions to describe the distribution of charge.
+
+### 1-D Charge Distribution
+
+For a line of charge with linear charge density $\lambda(x,y,z)$, the total charge $dq$ in an infinitesimal length $dx$ is given by:
+
+$$
+dq = \lambda(x,y,z) \, dl
+$$
+
+where $dl$ is the infinitesimal length element along the line of charge. The electric field due to this line charge at a point $\mathbf{r}$ is given by:
+
+$$
+\mathbf{E}(\mathbf{r}) = \int \frac{1}{4\pi\epsilon_0}\frac{\lambda(x,y,z)}{|\mathbf{r}-\mathbf{r}'|^3}(\mathbf{r}-\mathbf{r}') \, dl
+$$
+
+where the integral is taken over the entire length of the line charge.
+
+### 2-D Charge Distribution
+
+For a surface of charge with surface charge density $\sigma(x,y,z)$, the total charge $dq$ in an infinitesimal area $dA$ is given by:
+
+$$
+dq = \sigma(x,y,z) \, dA
+$$
+
+where $dA$ is the infinitesimal area element on the surface of charge. The electric field due to this surface charge at a point $\mathbf{r}$ is given by:
+
+$$
+\mathbf{E}(\mathbf{r}) = \int \frac{1}{4\pi\epsilon_0}\frac{\sigma(x,y,z)}{|\mathbf{r}-\mathbf{r}'|^3}(\mathbf{r}-\mathbf{r}') \, dA
+$$
+
+where the integral is taken over the entire surface of charge.
+
+### 3-D Charge Distribution
+
+For a volume of charge with volume charge density $\rho(x,y,z)$, the total charge $dq$ in an infinitesimal volume $dV$ is given by:
+
+$$
+dq = \rho(x,y,z) \, dV
+$$
+
+where $dV$ is the infinitesimal volume element. The electric field due to this volume charge at a point $\mathbf{r}$ is given by:
+
+$$
+\mathbf{E}(\mathbf{r}) = \int \frac{1}{4\pi\epsilon_0}\frac{\rho(x,y,z)}{|\mathbf{r}-\mathbf{r}'|^3}(\mathbf{r}-\mathbf{r}') \, dV
+$$
+
+where the integral is taken over the entire volume of charge.
+
+#### Example 1: Electric Field of an Infinitely Long Charged Line
+
+Consider an infinitely long, uniformly charged line with linear charge density $\lambda$, aligned along the $z$-axis. Due to the cylindrical symmetry, the electric field $\mathbf{E}$ is radial, perpendicular to the line. We calculate the field at $\mathbf{r} = (x, 0, 0)$, a distance $x$ from the $z$-axis.
+
+For a linear charge distribution, the electric field is:
+
+$$
+\mathbf{E}(\mathbf{r}) = \int \frac{1}{4\pi\epsilon_0} \frac{\lambda(0,0,z)}{|\mathbf{r} - \mathbf{r}'|^3} (\mathbf{r} - \mathbf{r}') \, dl,
+$$
+
+where 
+
+* $\mathbf{r}' = (0, 0, z')$ lies on the line 
+* $dl = dz'$, and $z'$ extends from $-\infty$ to $\infty$
+* $\mathbf{r} - \mathbf{r}' = (x, 0, -z')$
+* $|\mathbf{r} - \mathbf{r}'| = \sqrt{x^2 + z'^2}$.
+
+The field components are:
+
+
+$$
+\begin{align*}
+E_x &= \frac{\lambda}{4\pi\epsilon_0} \int_{-\infty}^{\infty} \frac{x \, dz'}{(x^2 + z'^2)^{3/2}}, \\
+E_y &= 0, \\
+E_z &= \frac{\lambda}{4\pi\epsilon_0} \int_{-\infty}^{\infty} \frac{-z' \, dz'}{(x^2 + z'^2)^{3/2}}.
+\end{align*}
+$$
+
+The $z$-component **vanishes** due to symmetry, as the integrand is odd over symmetric limits. For the $x$-component:
+
+$$
+E_x = \frac{\lambda x}{4\pi\epsilon_0} 2 \int_0^{\infty} \frac{dz'}{(x^2 + z'^2)^{3/2}}.
+$$
+
+Using the substitution $z' = x \tan\theta$, $dz' = x \sec^2\theta \, d\theta$, the integral becomes:
+
+$$
+\int_0^{\infty} \frac{dz'}{(x^2 + z'^2)^{3/2}} = \frac{1}{x^2} \int_0^{\pi/2} \cos\theta \, d\theta = \frac{1}{x^2} [\sin\theta]_0^{\pi/2} = \frac{1}{x^2}.
+$$
+
+Thus:
+
+$$
+E_x = \frac{\lambda x}{4\pi\epsilon_0} \cdot 2 \cdot \frac{1}{x^2} = \frac{\lambda}{2\pi\epsilon_0 x}.
+$$
+
+The electric field is:
+
+$$
+\mathbf{E} = \frac{\lambda}{2\pi\epsilon_0 x} \hat{x},
+$$
+
+or, in general, at a radial distance $r = |x|$:
+
+$$
+E = \frac{\lambda}{2\pi\epsilon_0 r},
+$$
+
+directed radially outward, consistent with the symmetry.
+
+
+### Example 2: Electric Field of an Infinite Charged Plane
+
+Consider an infinite, uniformly charged plane with surface charge density $\sigma$, lying in the $xy$-plane at $z = 0$. Due to the planar symmetry, the electric field $\mathbf{E}$ is perpendicular to the plane, directed along the $z$-axis, and depends only on the distance from the plane. We calculate the field at a point $\mathbf{r} = (0, 0, z)$, a distance $z$ above the plane.
+
+For a surface charge distribution, the electric field is:
+
+$$
+\mathbf{E}(\mathbf{r}) = \int \frac{1}{4\pi\epsilon_0} \frac{\sigma}{|\mathbf{r} - \mathbf{r}'|^3} (\mathbf{r} - \mathbf{r}') \, dA,
+$$
+
+where $\mathbf{r}' = (x', y', 0)$ is a point on the plane, and $dA = dx' \, dy'$ is the infinitesimal area element, integrated over the entire $xy$-plane. The vector $\mathbf{r} - \mathbf{r}' = (0, 0, z) - (x', y', 0) = (-x', -y', z)$, with magnitude $|\mathbf{r} - \mathbf{r}'| = \sqrt{x'^2 + y'^2 + z^2}$.
+
+The $z$-component of the field is:
+
+$$
+E_z = \frac{\sigma}{4\pi\epsilon_0} \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \frac{z \, dx' \, dy'}{(x'^2 + y'^2 + z^2)^{3/2}}.
+$$
+
+Switching to polar coordinates, where $x' = r' \cos\theta$, $y' = r' \sin\theta$, and $dA = r' \, dr' \, d\theta$, with $r'$ from 0 to $\infty$ and $\theta$ from 0 to $2\pi$, the integral becomes:
+
+$$
+E_z = \frac{\sigma z}{4\pi\epsilon_0} \int_0^{2\pi} d\theta \int_0^{\infty} \frac{r' \, dr'}{(r'^2 + z^2)^{3/2}}.
+$$
+
+The angular part gives $2\pi$. For the radial integral, let $u = r'^2 + z^2$, so $du = 2 r' \, dr'$, and:
+
+$$
+\int_0^{\infty} \frac{r' \, dr'}{(r'^2 + z^2)^{3/2}} = \int_{z^2}^{\infty} \frac{du}{2 u^{3/2}} = \left[ -\frac{1}{u^{1/2}} \right]_{z^2}^{\infty} = 0 - \left( -\frac{1}{|z|} \right) = \frac{1}{|z|}.
+$$
+
+Thus:
+
+$$
+E_z = \frac{\sigma z}{4\pi\epsilon_0} \cdot 2\pi \cdot \frac{1}{|z|} = \frac{\sigma}{2\epsilon_0} \frac{z}{|z|}.
+$$
+
+The field is:
+
+$$
+\mathbf{E} = \frac{\sigma}{2\epsilon_0} \hat{z} \quad (z > 0), \quad \mathbf{E} = -\frac{\sigma}{2\epsilon_0} \hat{z} \quad (z < 0),
+$$
+
+with magnitude:
+
+$$
+E = \frac{\sigma}{2\epsilon_0},
+$$
+
+independent of distance, directed away from the plane on both sides.
+
+### Example 3: Electric Field of a Uniformly Charged Sphere
+
+Consider a solid sphere of radius $R$ with a uniform volume charge density $\rho$, centered at the origin. The spherical symmetry implies that the electric field $\mathbf{E}$ is radial, directed along $\hat{r}$, and its magnitude depends solely on the radial distance $r = |\mathbf{r}|$ from the center. We determine the field at a point $\mathbf{r} = (r, 0, 0)$ for two cases: $r > R$ (outside the sphere) and $r < R$ (inside the sphere), using the volume charge distribution formula:
+
+$$
+\mathbf{E}(\mathbf{r}) = \int \frac{1}{4\pi\epsilon_0} \frac{\rho}{|\mathbf{r} - \mathbf{r}'|^3} (\mathbf{r} - \mathbf{r}') \, dV,
+$$
+
+where $\mathbf{r}'$ is a position within the sphere, and $dV$ is the infinitesimal volume element, integrated over the sphere’s volume.
+
+#### Outside the Sphere ($r > R$)
+For a point outside the sphere ($r > R$), the entire charge of the sphere contributes to the field. The total charge $Q$ is the volume integral of the charge density:
+
+$$
+Q = \rho \cdot \frac{4}{3}\pi R^3.
+$$
+
+Spherical symmetry suggests the field behaves as if all charge were concentrated at the origin, like a point charge. To confirm, express the position of a charge element in spherical coordinates: $\mathbf{r}' = (r', \theta', \phi')$, with $r'$ from 0 to $R$, $\theta'$ from 0 to $\pi$, and $\phi'$ from 0 to $2\pi$. The volume element is $dV = r'^2 \sin\theta' \, dr' \, d\theta' \, d\phi'$. The distance $|\mathbf{r} - \mathbf{r}'| = \sqrt{r^2 + r'^2 - 2 r r' \cos\theta'}$, and the radial component of $\mathbf{r} - \mathbf{r}'$ dominates due to symmetry.
+
+The electric field’s radial component is:
+
+$$
+E_r = \frac{\rho}{4\pi\epsilon_0} \int_0^R \int_0^\pi \int_0^{2\pi} \frac{r - r' \cos\theta'}{(r^2 + r'^2 - 2 r r' \cos\theta')^{3/2}} r'^2 \sin\theta' \, d\phi' \, d\theta' \, dr'.
+$$
+
+The $\phi'$-integral yields $2\pi$, as the field is azimuthally symmetric. The $\theta'$-integral simplifies with $u = \cos\theta'$, and for $r > R$, the distance term approximates to $r$ at large $r$, leading to:
+
+$$
+E_r = \frac{\rho}{4\pi\epsilon_0} \cdot 2\pi \int_0^R r'^2 \, dr' \cdot \frac{1}{r^2} = \frac{\rho}{4\pi\epsilon_0} \cdot \frac{4\pi R^3}{3} \cdot \frac{1}{r^2} = \frac{Q}{4\pi\epsilon_0 r^2}.
+$$
+
+Thus, the field outside is:
+
+$$
+\mathbf{E} = \frac{\rho R^3}{3\epsilon_0 r^2} \hat{r} \quad (r > R),
+$$
+
+identical to that of a point charge $Q$ at the origin, decreasing with the inverse square of distance.
+
+#### Inside the Sphere ($r < R$)
+For a point inside the sphere ($r < R$), only the charge within radius $r$ contributes to the field, as the outer shell ($r' > r$) produces no net field inside due to symmetry (a consequence of Gauss’s law for spherical shells). The enclosed charge is:
+
+$$
+Q_{\text{enc}} = \rho \cdot \frac{4}{3}\pi r^3,
+$$
+
+proportional to $r^3$, reflecting the uniform density. The integral splits into two regions: $r' < r$ and $r' > r$. The outer region’s contribution cancels internally, leaving the field from the inner sphere of radius $r$:
+
+$$
+E_r = \frac{\rho}{4\pi\epsilon_0} \int_0^r \int_0^\pi \int_0^{2\pi} \frac{r - r' \cos\theta'}{(r^2 + r'^2 - 2 r r' \cos\theta')^{3/2}} r'^2 \sin\theta' \, d\phi' \, d\theta' \, dr'.
+$$
+
+Symmetry again simplifies the calculation. For $r' < r$, the field resembles that of a point charge at the origin, adjusted for the enclosed volume:
+
+$$
+E_r = \frac{\rho}{4\pi\epsilon_0} \cdot \frac{4\pi r^3}{3} \cdot \frac{1}{r^2} = \frac{\rho r}{3\epsilon_0}.
+$$
+
+Thus, the field inside is:
+
+$$
+\mathbf{E} = \frac{\rho r}{3\epsilon_0} \hat{r} \quad (r < R),
+$$
+
+increasing linearly with $r$, and zero at the center ($r = 0$), as no charge is enclosed there.
+
+#### Summary and Interpretation
+- **Outside ($r > R$)**: $E = \frac{\rho R^3}{3\epsilon_0 r^2} = \frac{Q}{4\pi\epsilon_0 r^2}$, the field of a point charge, consistent with the sphere’s total charge.
+- **Inside ($r < R$)**: $E = \frac{\rho r}{3\epsilon_0}$, a linear dependence reflecting the enclosed charge growing with $r^3$, while the $1/r^2$ factor is tempered by symmetry.
+
+The transition at $r = R$ is continuous, with $E = \frac{\rho R}{3\epsilon_0}$ at the surface, matching both expressions when adjusted for total charge. This result aligns with Gauss’s law, offering a powerful check on the integration method.
+
+---
