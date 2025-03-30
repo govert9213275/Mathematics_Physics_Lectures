@@ -1,0 +1,211 @@
+---
+title: Waves
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 3
+    highlight-style: tango
+    code-line-numbers: true
+    code-fold: true
+    code-summary: "Show the code"
+    code-tools: true
+    code-block-bg: "rgba(42, 174, 42, 0.02)"
+    code-block-border-left: "#2aae2a"
+    code-language-label: true
+    css: styles.css
+    math: mathjax
+    self-contained: true
+    other-links:
+      - text: Main page
+        href: https://dchorazkiewicz.github.io/Mathematics_Physics_Lectures   
+
+---
+
+## Surface Wave
+
+Let us consider following wave equation for source located at the origin:
+
+$$
+\eta(x,y,t) = \frac{A}{\sqrt{r}} \sin(kr - \omega t)
+$$
+
+where $r = \sqrt{x^2 + y^2}$ is the distance from the source, $A$ is the amplitude, $k$ is the wave number, and $\omega$ is the angular frequency.
+
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_wave_heatmap(A=1.0, k=2.0, omega=1.0, t=0.0, epsilon=0.1, 
+                     x_range=(-10, 10), y_range=(-10, 10), grid_size=200):
+    x = np.linspace(x_range[0], x_range[1], grid_size)
+    y = np.linspace(y_range[0], y_range[1], grid_size)
+    X, Y = np.meshgrid(x, y)
+    r = np.sqrt(X**2 + Y**2)
+    wave = np.zeros_like(r)
+    mask = r > epsilon  # Exclude values where r <= epsilon
+    wave[mask] = (A / np.sqrt(r[mask])) * np.sin(k * r[mask] - omega * t)
+    plt.figure(figsize=(10, 8))
+    plt.imshow(wave, extent=[x_range[0], x_range[1], y_range[0], y_range[1]], 
+              cmap='RdBu', interpolation='nearest')
+    plt.colorbar(label='Amplitude')
+    plt.title('Wave Heatmap')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.grid(False)
+    plt.show()
+
+plot_wave_heatmap(A=1.0, k=3.0, omega=3.0, t=0.0, epsilon=1)
+```
+
+## Multiple sources
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_multi_wave_heatmap(A=1.0, k=2.0, omega=1.0, t=0.0, epsilon=0.1, 
+                          x_range=(-10, 10), y_range=(-10, 10), grid_size=200,
+                          num_sources=3, circle_radius=5.0):
+    """
+    Plots a heatmap of multiple wave sources arranged in a regular polygon with 0 at colormap center.
+    
+    Additional Parameters:
+    num_sources : int - number of wave sources
+    circle_radius : float - radius of the circle on which sources are placed
+    """
+    x = np.linspace(x_range[0], x_range[1], grid_size)
+    y = np.linspace(y_range[0], y_range[1], grid_size)
+    X, Y = np.meshgrid(x, y)
+    
+    # Initialize the wave array
+    total_wave = np.zeros_like(X)
+    
+    # Calculate source positions (vertices of regular polygon)
+    angles = np.linspace(0, 2*np.pi, num_sources, endpoint=False)
+    source_x = circle_radius * np.cos(angles)
+    source_y = circle_radius * np.sin(angles)
+    
+    # Calculate wave contribution from each source
+    for sx, sy in zip(source_x, source_y):
+        r = np.sqrt((X - sx)**2 + (Y - sy)**2)
+        wave = np.zeros_like(r)
+        mask = r > epsilon
+        wave[mask] = (A / np.sqrt(r[mask])) * np.sin(k * r[mask] - omega * t)
+        total_wave += wave
+    
+    # Create the plot with symmetric colormap around 0
+    plt.figure(figsize=(10, 8))
+    max_abs = np.max(np.abs(total_wave))  # Get maximum absolute value
+    plt.imshow(total_wave, extent=[x_range[0], x_range[1], y_range[0], y_range[1]], 
+              cmap='RdBu', interpolation='nearest', vmin=-max_abs, vmax=max_abs)
+    plt.colorbar(label='Amplitude')
+    plt.title(f'Wave Heatmap with {num_sources} Sources')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.grid(False)
+    plt.show()
+
+# Example usage:
+# plot_multi_wave_heatmap(num_sources=5, circle_radius=4.0)
+```
+
+```{python}
+plot_multi_wave_heatmap(num_sources=2)
+plot_multi_wave_heatmap(num_sources=3)
+plot_multi_wave_heatmap(num_sources=4)
+plot_multi_wave_heatmap(num_sources=5)
+plot_multi_wave_heatmap(num_sources=6)
+plot_multi_wave_heatmap(num_sources=7)
+plot_multi_wave_heatmap(num_sources=8)
+plot_multi_wave_heatmap(num_sources=9)
+plot_multi_wave_heatmap(num_sources=10)
+plot_multi_wave_heatmap(num_sources=20)
+plot_multi_wave_heatmap(num_sources=30)
+plot_multi_wave_heatmap(num_sources=40)
+plot_multi_wave_heatmap(num_sources=50)
+```
+
+## Time evolution of the wave
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+def create_wave_gif(A=1.0, k=2.0, omega=1.0, t_range=(0, 10), frames=100, epsilon=0.1, 
+                   x_range=(-10, 10), y_range=(-10, 10), grid_size=200,
+                   num_sources=3, circle_radius=5.0, filename='pics/wave_animation.gif'):
+    """
+    Creates a GIF animation of multiple wave sources over a time range.
+    
+    Additional Parameters:
+    t_range : tuple - (start_time, end_time) for animation
+    frames : int - number of frames in animation
+    filename : str - output GIF filename
+    """
+    # Create grid
+    x = np.linspace(x_range[0], x_range[1], grid_size)
+    y = np.linspace(y_range[0], y_range[1], grid_size)
+    X, Y = np.meshgrid(x, y)
+    
+    # Calculate source positions
+    angles = np.linspace(0, 2*np.pi, num_sources, endpoint=False)
+    source_x = circle_radius * np.cos(angles)
+    source_y = circle_radius * np.sin(angles)
+    
+    # Set up the figure
+    fig = plt.figure(figsize=(10, 8))
+    total_wave = np.zeros_like(X)
+    
+    # Initial wave calculation (for setting color scale)
+    for sx, sy in zip(source_x, source_y):
+        r = np.sqrt((X - sx)**2 + (Y - sy)**2)
+        mask = r > epsilon
+        total_wave[mask] += (A / np.sqrt(r[mask])) * np.sin(k * r[mask])
+    max_abs = np.max(np.abs(total_wave))  # Fixed color scale
+    
+    # Create initial plot
+    im = plt.imshow(total_wave, extent=[x_range[0], x_range[1], y_range[0], y_range[1]], 
+                   cmap='RdBu', interpolation='nearest', vmin=-max_abs, vmax=max_abs)
+    plt.colorbar(label='Amplitude')
+    plt.title(f'Wave Animation with {num_sources} Sources')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.grid(False)
+    
+    # Animation function
+    def update(frame):
+        t = t_range[0] + (t_range[1] - t_range[0]) * frame / (frames - 1)
+        total_wave = np.zeros_like(X)
+        for sx, sy in zip(source_x, source_y):
+            r = np.sqrt((X - sx)**2 + (Y - sy)**2)
+            mask = r > epsilon
+            total_wave[mask] += (A / np.sqrt(r[mask])) * np.sin(k * r[mask] - omega * t)
+        im.set_array(total_wave)
+        return [im]
+    
+    # Create animation
+    anim = FuncAnimation(fig, update, frames=frames, interval=50, blit=True)
+    
+    # Save as GIF
+    anim.save(filename, writer='pillow')
+    plt.close()
+    print(f"GIF saved as {filename}")
+
+# Example usage:
+# create_wave_gif(num_sources=5, circle_radius=4.0, t_range=(0, 10), frames=100,
+# filename='pics/wave_animation_5.gif')
+```
+
+![5](pics/wave_animation_5.gif)
+
+
+```{python}
+# Example usage:
+# create_wave_gif(num_sources=50, circle_radius=4.0, t_range=(0, 10), frames=100,
+# filename='pics/wave_animation_50.gif')
+```
+
+![50](pics/wave_animation_50.gif)
