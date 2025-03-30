@@ -1,0 +1,52 @@
+---
+title: Lorentz force
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 3
+    highlight-style: tango
+    code-line-numbers: true
+    code-fold: true
+    code-summary: "Show the code"
+    code-tools: true
+    code-block-bg: "rgba(42, 174, 42, 0.02)"
+    code-block-border-left: "#2aae2a"
+    code-language-label: true
+    css: styles.css
+    math: mathjax
+    self-contained: true
+    other-links:
+      - text: Main page
+        href: https://dchorazkiewicz.github.io/Mathematics_Physics_Lectures   
+
+---
+
+## Lorentz force
+
+The Lorentz force is the force experienced by a charged particle moving in an electromagnetic field. It is given by the equation:
+
+$$
+\mathbf{F} = q(\mathbf{E} + \mathbf{v} \times \mathbf{B})
+$$
+
+where:
+- $\mathbf{F}$ is the Lorentz force,
+- $q$ is the charge of the particle,
+- $\mathbf{E}$ is the electric field,
+- $\mathbf{v}$ is the velocity of the particle,
+- $\mathbf{B}$ is the magnetic field,
+- $\times$ denotes the cross product.
+- $\mathbf{F}$ is a vector quantity, and it can be expressed in terms of its components in the Cartesian coordinate system as:
+
+$$
+\mathbf{F} = (F_x, F_y, F_z) = q(E_x + v_y B_z - v_z B_y, E_y + v_z B_x - v_x B_z, E_z + v_x B_y - v_y B_x)
+$$
+
+where:
+- $F_x$, $F_y$, and $F_z$ are the components of the Lorentz force in the x, y, and z directions, respectively,
+- $E_x$, $E_y$, and $E_z$ are the components of the electric field,
+- $v_x$, $v_y$, and $v_z$ are the components of the velocity,
+- $B_x$, $B_y$, and $B_z$ are the components of the magnetic field.
+
+The Lorentz force is responsible for the motion of charged particles in electric and magnetic fields, and it plays a crucial role in many physical phenomena, including the behavior of charged particles in accelerators, the operation of electric motors, and the dynamics of plasmas.
