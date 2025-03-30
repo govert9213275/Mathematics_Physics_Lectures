@@ -30,23 +30,229 @@ $$
 \mathbf{F} = q(\mathbf{E} + \mathbf{v} \times \mathbf{B})
 $$
 
-where:
-- $\mathbf{F}$ is the Lorentz force,
-- $q$ is the charge of the particle,
-- $\mathbf{E}$ is the electric field,
-- $\mathbf{v}$ is the velocity of the particle,
-- $\mathbf{B}$ is the magnetic field,
-- $\times$ denotes the cross product.
-- $\mathbf{F}$ is a vector quantity, and it can be expressed in terms of its components in the Cartesian coordinate system as:
-
+Where in component form, the Lorentz force can be expressed as:
 $$
-\mathbf{F} = (F_x, F_y, F_z) = q(E_x + v_y B_z - v_z B_y, E_y + v_z B_x - v_x B_z, E_z + v_x B_y - v_y B_x)
+\begin{align*}
+F_x &= q(E_x + v_y B_z - v_z B_y) \\
+F_y &= q(E_y + v_z B_x - v_x B_z) \\
+F_z &= q(E_z + v_x B_y - v_y B_x)
+\end{align*}
 $$
 
-where:
-- $F_x$, $F_y$, and $F_z$ are the components of the Lorentz force in the x, y, and z directions, respectively,
-- $E_x$, $E_y$, and $E_z$ are the components of the electric field,
-- $v_x$, $v_y$, and $v_z$ are the components of the velocity,
-- $B_x$, $B_y$, and $B_z$ are the components of the magnetic field.
 
-The Lorentz force is responsible for the motion of charged particles in electric and magnetic fields, and it plays a crucial role in many physical phenomena, including the behavior of charged particles in accelerators, the operation of electric motors, and the dynamics of plasmas.
+```{python}
+import numpy as np
+from scipy.integrate import odeint
+import plotly.graph_objects as go
+
+def lorentz_force(state, t, q, m, E_field, B_field):
+    x, y, z, vx, vy, vz = state
+    Ex, Ey, Ez = E_field(x, y, z)
+    Bx, By, Bz = B_field(x, y, z)
+    Fx = q * (Ex + vy * Bz - vz * By)
+    Fy = q * (Ey + vz * Bx - vx * Bz)
+    Fz = q * (Ez + vx * By - vy * Bx)
+    ax = Fx / m
+    ay = Fy / m
+    az = Fz / m
+    return [vx, vy, vz, ax, ay, az]
+
+def plot_lorentz_motion(q=1.6e-19, m=9.1e-31, E_field=None, B_field=None,
+                       initial_conditions=[0, 0, 0, 1, 0, 0], 
+                       t_range=(0, 1e-6), num_points=1000):
+    # Domyślne pola
+    if E_field is None:
+        E_field = lambda x, y, z: (0, 0, 0)
+    if B_field is None:
+        B_field = lambda x, y, z: (0, 0, 1)
+    
+    # Tablica czasu
+    t = np.linspace(t_range[0], t_range[1], num_points)
+    
+    # Rozwiązanie ODE
+    solution = odeint(lorentz_force, initial_conditions, t, args=(q, m, E_field, B_field))
+    x, y, z = solution[:, 0], solution[:, 1], solution[:, 2]
+    
+    # Wykres 3D w Plotly
+    fig = go.Figure(data=[go.Scatter3d(
+        x=x, y=y, z=z,
+        mode='lines',
+        line=dict(width=4, color='blue'),
+        name='Particle trajectory'
+    )])
+    
+    fig.update_layout(
+        title='Particle Motion under Lorentz Force',
+        scene=dict(
+            xaxis_title='X',
+            yaxis_title='Y',
+            zaxis_title='Z',
+            aspectmode='auto'
+        ),
+        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
+    )
+    
+    fig.show()
+```
+
+## First example
+
+Initial conditions: 
+
+* Position: (1, 0, 0)
+* Velocity: (0, 1, 0)
+* Electric field: (0, 0, 0)
+* Magnetic field: (0, 0, 1)
+
+```{python}
+plot_lorentz_motion(
+    q=1,
+    m=1,
+    initial_conditions=[1, 0, 0, 0, 1, 0],
+    E_field=lambda x, y, z: (0, 0, 0),
+    B_field=lambda x, y, z: (0, 0, 1),
+    t_range=(0, 10)
+)
+```
+
+## Second example
+
+Initial conditions:
+
+* Position: (0, 0, 0)
+* Velocity: (1, 0, 0)
+* Electric field: (0, 0, 0)
+* Magnetic field: (1, 0, 0)
+
+```{python}
+plot_lorentz_motion(
+    q=1,
+    m=1,
+    initial_conditions=[0, 0, 0, 1, 0, 0],
+    E_field=lambda x, y, z: (0, 0, 0),
+    B_field=lambda x, y, z: (1, 0, 0),
+    t_range=(0, 10)
+)
+```
+
+## Third example
+
+Initial conditions:
+
+* Position: (0, 0, 0)
+* Velocity: (1, 0, 0)
+* Electric field: (0, 0, 0)
+* Magnetic field: (0, 1, 0)
+
+```{python}
+plot_lorentz_motion(
+    q=1,
+    m=1,
+    initial_conditions=[0, 0, 0, 1, 0, 0],
+    E_field=lambda x, y, z: (0, 0, 0),
+    B_field=lambda x, y, z: (0, 1, 0),
+    t_range=(0, 10)
+)
+```
+
+## Fourth example
+
+Initial conditions:
+
+* Position: (0, 0, 0)
+* Velocity: (1, 0, 1)
+* Electric field: (0, 0, 0)
+* Magnetic field: (0, 0, 1)
+
+```{python}
+plot_lorentz_motion(
+    q=1,
+    m=1,
+    initial_conditions=[0, 0, 0, 1, 0, 1],
+    E_field=lambda x, y, z: (0, 0, 0),
+    B_field=lambda x, y, z: (0, 0, 1),
+    t_range=(0, 10)
+)
+```
+
+# Fifth example
+
+Initial conditions:
+
+* Position: (0, 0, 0)
+* Velocity: (1, 0, 0)
+* Electric field: (0, 1, 0)
+* Magnetic field: (0, 0, 0)
+
+```{python}
+plot_lorentz_motion(
+    q=1,
+    m=1,
+    initial_conditions=[0, 0, 0, 1, 0, 0],
+    E_field=lambda x, y, z: (0, 1, 0),
+    B_field=lambda x, y, z: (0, 0, 0),
+    t_range=(0, 10)
+)
+```
+
+# Sixth example
+
+Force compensation!
+
+Initial conditions:
+
+* Position: (0, 0, 0)
+* Velocity: (1, 0, 0)
+* Electric field: (0, 1, 0)
+* Magnetic field: (0, 0, 1)
+
+```{python}
+plot_lorentz_motion(
+    q=1,
+    m=1,
+    initial_conditions=[0, 0, 0, 1, 0, 0],
+    E_field=lambda x, y, z: (0, 1, 0),
+    B_field=lambda x, y, z: (0, 0, 1),
+    t_range=(0, 4)
+)
+```
+
+# Seventh example
+
+Initial conditions:
+
+* Position: (0, 0, 0)
+* Velocity: (1, 0, 0)
+* Electric field: (1, 0, 0)
+* Magnetic field: (0, 0, 1)
+
+```{python}
+plot_lorentz_motion(
+    q=1,
+    m=1,
+    initial_conditions=[0, 0, 0, 1, 0, 0],
+    E_field=lambda x, y, z: (1, 0, 0),
+    B_field=lambda x, y, z: (0, 0, 1),
+    t_range=(0, 20)
+)
+```
+
+# Eighth example
+
+Initial conditions:
+
+* Position: (0, 0, 0)
+* Velocity: (1, 0, 1)
+* Electric field: (1, 0, 0)
+* Magnetic field: (0, 0, 1)
+
+```{python}
+plot_lorentz_motion(
+    q=1,
+    m=1,
+    initial_conditions=[0, 0, 0, 1, 0, 1],
+    E_field=lambda x, y, z: (1, 0, 0),
+    B_field=lambda x, y, z: (0, 0, 1),
+    t_range=(0, 20)
+)
+```
