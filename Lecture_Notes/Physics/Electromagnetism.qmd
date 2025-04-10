@@ -47,10 +47,14 @@ where:
 
 
 where $\epsilon_0$ is the vacuum permittivity.
+
+![https://upload.wikimedia.org/wikipedia/commons/1/1f/CoulombsLaw_scal.svg](https://upload.wikimedia.org/wikipedia/commons/1/1f/CoulombsLaw_scal.svg)
+
+
 It is ease to observe that the force is attractive if the charges are of opposite sign and repulsive if they are of the same sign. Secondly, the force has same structure as the gravitational force, which is given by
 
 $$
-\mathbf{F} = -\frac{GMm}{|\mathbf{r}-\mathbf{r}'|^3}(\mathbf{r}-\mathbf{r}')
+\mathbf{F} = -G\frac{Mm}{|\mathbf{r}-\mathbf{r}'|^3}(\mathbf{r}-\mathbf{r}')
 $$
 
 where:
@@ -72,6 +76,8 @@ $$
 \mathbf{E}(\mathbf{r}) = \frac{1}{4\pi\epsilon_0}\frac{q}{|\mathbf{r}-\mathbf{r}'|^3}(\mathbf{r}-\mathbf{r}')
 $$
 
+
+
 #### Superposition Principle
 
 The electric field due to multiple point charges can be calculated using the superposition principle. The total electric field $\mathbf{E}_{\text{total}}$ at a point $\mathbf{r}$ due to a set of point charges $q_1, q_2, \ldots, q_n$ located at positions $\mathbf{r}_1, \mathbf{r}_2, \ldots, \mathbf{r}_n$ is given by:
@@ -80,7 +86,84 @@ $$
 \mathbf{E}_{\text{total}}(\mathbf{r}) = \sum_{i=1}^{n} \mathbf{E}_i(\mathbf{r}) = \sum_{i=1}^{n} \frac{1}{4\pi\epsilon_0}\frac{q_i}{|\mathbf{r}-\mathbf{r}_i|^3}(\mathbf{r}-\mathbf{r}_i)
 $$
 
-where $\mathbf{E}_i(\mathbf{r})$ is the electric field due to the $i$-th charge at position $\mathbf{r}_i$. If charge $Q$ is placed at position $\mathbf{r}$, the force acting on it due to the electric field is given by:
+where $\mathbf{E}_i(\mathbf{r})$ is the electric field due to the $i$-th charge at position $\mathbf{r}_i$.
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def draw_electric_field(charges, ax):
+    # Create a grid of points in 2D space
+    x = np.linspace(-5, 5, 30)
+    y = np.linspace(-5, 5, 30)
+    X, Y = np.meshgrid(x, y)
+    
+    # Initialize electric field components
+    Ex = np.zeros(X.shape)
+    Ey = np.zeros(Y.shape)
+    
+    # Coulomb's constant (simplified for visualization)
+    k = 1
+    
+    # Calculate the field for each charge
+    for charge, pos_x, pos_y in charges:
+        # Vector from the charge to the point
+        r_x = X - pos_x
+        r_y = Y - pos_y
+        r = np.sqrt(r_x**2 + r_y**2)
+        
+        # Prevent division by zero
+        r = np.maximum(r, 0.1)
+        
+        # Electric field E = k * q / r^2, split into components
+        E = k * charge / r**2
+        Ex += E * r_x / r
+        Ey += E * r_y / r
+    
+    # Draw field lines using streamplot on the given axis
+    ax.streamplot(X, Y, Ex, Ey, color='blue', linewidth=1)
+    
+    # Plot the charges
+    for charge, pos_x, pos_y in charges:
+        if charge > 0:
+            ax.plot(pos_x, pos_y, 'ro', markersize=10)  # Red for positive
+        else:
+            ax.plot(pos_x, pos_y, 'bo', markersize=10)  # Blue for negative
+    
+    ax.grid(True)
+    ax.set_title("Electric Field Lines")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+
+def draw_multiple_fields(configurations, layout):
+    # Create a figure with subplots based on the layout
+    fig, axes = plt.subplots(layout[0], layout[1], figsize=(layout[1] * 5, layout[0] * 5))
+    
+    # Flatten axes array if it's 2D for easier iteration
+    axes = axes.flatten() if layout[0] > 1 or layout[1] > 1 else [axes]
+    
+    # Draw each configuration on its corresponding subplot
+    for i, charges in enumerate(configurations):
+        if i < len(axes):  # Ensure we don’t exceed the number of subplots
+            draw_electric_field(charges, axes[i])
+    
+    plt.tight_layout()
+    plt.show()
+
+# Example usage: list of configurations and layout
+configurations = [
+    [(1, 0, 0)],          
+    [(1, -2, 0), (-1, 2, 0)], 
+    [(1, 1, 1), (-1,-1,1),(1,-1,-1),(-1,1,-1)], 
+    # [(1, 1, 1), (1,-1,1),(1,-1,-1),(1,1,-1)],
+    [(1,i,0) for i in np.arange(-3, 4,0.02)], 
+]
+layout = (2, 2)  # 1 row, 3 columns
+draw_multiple_fields(configurations, layout)
+```
+
+
+If charge $Q$ is placed at position $\mathbf{r}$, the force acting on it due to the electric field is given by:
 
 $$
 \mathbf{F} = Q \cdot \mathbf{E}_{\text{total}}(\mathbf{r})
@@ -88,11 +171,13 @@ $$
 
 ## Continuous Charge Distribution
 
-In many practical situations, charges are distributed over a volume, surface, or line rather than being concentrated at discrete points. In such cases, we can define charge density functions to describe the distribution of charge.
+In many practical situations, charges are distributed over a volume, surface, or line rather than being concentrated at discrete points. In such cases, we can define charge density functions to describe the distribution of charge. 
+
+[https://en.wikipedia.org/wiki/Electric_field](https://en.wikipedia.org/wiki/Electric_field)
 
 ### 1-D Charge Distribution
 
-For a line of charge with linear charge density $\lambda(x,y,z)$, the total charge $dq$ in an infinitesimal length $dx$ is given by:
+For a line of charge with linear charge density $\lambda(x,y,z)$, the total charge $dq$ in an infinitesimal length $dl$ is given by:
 
 $$
 dq = \lambda(x,y,z) \, dl
@@ -321,4 +406,324 @@ increasing linearly with $r$, and zero at the center ($r = 0$), as no charge is 
 
 The transition at $r = R$ is continuous, with $E = \frac{\rho R}{3\epsilon_0}$ at the surface, matching both expressions when adjusted for total charge. This result aligns with Gauss’s law, offering a powerful check on the integration method.
 
----
+
+## Lorentz Force
+
+The Lorentz force is the force experienced by a charged particle moving in an electromagnetic field. It is given by the equation:
+
+$$
+\mathbf{F} = q(\mathbf{E} + \mathbf{v} \times \mathbf{B})
+$$
+
+where:
+
+- $\mathbf{F}$ is the Lorentz force vector,
+- $q$ is the charge of the particle,
+- $\mathbf{v}$ is the velocity vector of the particle,
+- $\mathbf{E}$ is the electric field vector,
+- $\mathbf{B}$ is the magnetic field vector,
+
+Where in component form, the Lorentz force can be expressed as:
+
+$$
+\begin{align*}
+F_x &= q(E_x + v_y B_z - v_z B_y) \\
+F_y &= q(E_y + v_z B_x - v_x B_z) \\
+F_z &= q(E_z + v_x B_y - v_y B_x)
+\end{align*}
+$$
+
+### Special Case 1 
+
+* $\mathbf{E}=0$
+* $\mathbf{B} || \mathbf{v}$
+
+This leads to:
+
+$$
+\frac{d^2 r}{dt^2} = \frac{d\mathbf{v}}{dt} = \frac{q}{m} \mathbf{v} \times \mathbf{B} = 0 
+$$
+
+This means that the particle moves with constant velocity, i.e. $\mathbf{v} = \text{const}$.
+
+### Special Case 2
+
+* $\mathbf{E}=0$
+* $\mathbf{B} \perp \mathbf{v}$
+
+To simplify the notation, we will assume that $\mathbf{B} = (0,0,B)$ and $\mathbf{v} = (v_x,v_y,0)$. The Lorentz force can be expressed as:
+
+$$
+\begin{align*}
+F_x &= q(v_y B) \\
+F_y &= q(- v_x B) \\
+F_z &= 0
+\end{align*}
+$$
+
+This leads to the following system of equations:
+
+$$
+\begin{align*}
+\frac{d^2 x}{dt^2} &= \frac{q}{m} v_y B \\
+\frac{d^2 y}{dt^2} &= -\frac{q}{m} v_x B \\
+\frac{d^2 z}{dt^2} &= 0
+\end{align*}
+$$
+
+We can solve for the motion of the particle. Let’s start with the $z$-component, which is the simplest.
+
+#### Solving the $z$-Component
+The equation for the $z$-direction is:
+
+$$
+\frac{d^2 z}{dt^2} = 0
+$$
+
+Integrating with respect to time:
+
+$$
+\frac{dz}{dt} = v_{z0}
+$$
+
+where $v_{z0}$ is the constant velocity in the $z$-direction. Integrating again:
+
+$$
+z(t) = z_0 + v_{z0} t
+$$
+
+where $z_0$ is the initial position at $t = 0$. Since the initial velocity in the $z$-direction is given as $v_z = 0$ (from $\mathbf{v} = (v_x, v_y, 0)$), we have $v_{z0} = 0$, so:
+
+$$
+z(t) = z_0
+$$
+
+Without loss of generality, we can set $z_0 = 0$ (assuming the particle starts at $z = 0$), so:
+
+$$
+z(t) = 0
+$$
+
+This means the particle remains in the $xy$-plane, which is consistent with the magnetic field being perpendicular to the velocity ($\mathbf{B} \perp \mathbf{v}$).
+
+#### Solving the Coupled Equations for $x$ and $y$
+Now, let’s focus on the coupled equations for $x$ and $y$:
+
+$$
+\begin{align*}
+\frac{d^2 x}{dt^2} &= \frac{q}{m} \frac{dy}{dt} B \\
+\frac{d^2 y}{dt^2} &= -\frac{q}{m} \frac{dx}{dt} B
+\end{align*}
+$$
+
+Define the cyclotron frequency $\omega$:
+
+$$
+\omega = \frac{q B}{m}
+$$
+
+This simplifies the equations to:
+
+$$
+\begin{align*}
+\frac{d^2 x}{dt^2} &= \omega \frac{dy}{dt} \\
+\frac{d^2 y}{dt^2} &= -\omega \frac{dx}{dt}
+\end{align*}
+$$
+
+To solve this system, differentiate the first equation with respect to $t$:
+
+$$
+\frac{d^3 x}{dt^3} = \omega \frac{d^2 y}{dt^2}
+$$
+
+Substitute $\frac{d^2 y}{dt^2} = -\omega \frac{dx}{dt}$ from the second equation:
+
+$$
+\frac{d^3 x}{dt^3} = \omega \left( -\omega \frac{dx}{dt} \right) = -\omega^2 \frac{dx}{dt}
+$$
+
+$$
+\frac{d^3 x}{dt^3} + \omega^2 \frac{dx}{dt} = 0
+$$
+
+Let $v_x = \frac{dx}{dt}$. Then the equation becomes:
+
+$$
+\frac{d^2 v_x}{dt^2} + \omega^2 v_x = 0
+$$
+
+This is the equation of simple harmonic motion, with the general solution:
+
+$$
+v_x(t) = \frac{dx}{dt} = A \cos(\omega t) + B \sin(\omega t)
+$$
+
+Integrate to find $x(t)$:
+
+$$
+x(t) = \int (A \cos(\omega t) + B \sin(\omega t)) \, dt = \frac{A}{\omega} \sin(\omega t) - \frac{B}{\omega} \cos(\omega t) + C
+$$
+
+Now, use the first equation to find $\frac{dy}{dt}$:
+
+$$
+\frac{dy}{dt} = \frac{1}{\omega} \frac{d^2 x}{dt^2}
+$$
+
+$$
+\frac{d^2 x}{dt^2} = \frac{d}{dt} (A \cos(\omega t) + B \sin(\omega t)) = -A \omega \sin(\omega t) + B \omega \cos(\omega t)
+$$
+
+$$
+\frac{dy}{dt} = \frac{1}{\omega} (-A \omega \sin(\omega t) + B \omega \cos(\omega t)) = -A \sin(\omega t) + B \cos(\omega t)
+$$
+
+Integrate to find $y(t)$:
+
+$$
+y(t) = \int (-A \sin(\omega t) + B \cos(\omega t)) \, dt = \frac{A}{\omega} \cos(\omega t) + \frac{B}{\omega} \sin(\omega t) + D
+$$
+
+Thus, the solutions are:
+
+$$
+x(t) = \frac{A}{\omega} \sin(\omega t) - \frac{B}{\omega} \cos(\omega t) + C
+$$
+
+$$
+y(t) = \frac{A}{\omega} \cos(\omega t) + \frac{B}{\omega} \sin(\omega t) + D
+$$
+
+#### Applying Initial Conditions
+To determine the constants $A$, $B$, $C$, and $D$, we need initial conditions. Suppose the particle starts at position $(x_0, y_0, 0)$ with velocity $\mathbf{v} = (v_{x0}, v_{y0}, 0)$. At $t = 0$:
+
+$$
+x(0) = -\frac{B}{\omega} + C = x_0 \quad \Rightarrow \quad C = x_0 + \frac{B}{\omega}
+$$
+
+$$
+\frac{dx}{dt}(0) = A = v_{x0} \quad \Rightarrow \quad A = v_{x0}
+$$
+
+$$
+y(0) = \frac{A}{\omega} + D = y_0 \quad \Rightarrow \quad D = y_0 - \frac{A}{\omega} = y_0 - \frac{v_{x0}}{\omega}
+$$
+
+$$
+\frac{dy}{dt}(0) = B = v_{y0} \quad \Rightarrow \quad B = v_{y0}
+$$
+
+Substitute these into the solutions:
+
+$$
+x(t) = \frac{v_{x0}}{\omega} \sin(\omega t) - \frac{v_{y0}}{\omega} \cos(\omega t) + x_0 + \frac{v_{y0}}{\omega}
+$$
+
+$$
+y(t) = \frac{v_{x0}}{\omega} \cos(\omega t) + \frac{v_{y0}}{\omega} \sin(\omega t) + y_0 - \frac{v_{x0}}{\omega}
+$$
+
+Simplify:
+
+$$
+x(t) = x_0 + \frac{v_{y0}}{\omega} (1 - \cos(\omega t)) + \frac{v_{x0}}{\omega} \sin(\omega t)
+$$
+
+$$
+y(t) = y_0 + \frac{v_{x0}}{\omega} (\cos(\omega t) - 1) + \frac{v_{y0}}{\omega} \sin(\omega t)
+$$
+
+#### Physical Interpretation
+The motion in the $xy$-plane is circular. To confirm, compute the trajectory:
+
+$$
+x(t) - \left( x_0 + \frac{v_{y0}}{\omega} \right) = \frac{v_{x0}}{\omega} \sin(\omega t) - \frac{v_{y0}}{\omega} \cos(\omega t)
+$$
+
+$$
+y(t) - \left( y_0 - \frac{v_{x0}}{\omega} \right) = \frac{v_{x0}}{\omega} \cos(\omega t) + \frac{v_{y0}}{\omega} \sin(\omega t)
+$$
+
+This describes a circle centered at $\left( x_0 + \frac{v_{y0}}{\omega}, y_0 - \frac{v_{x0}}{\omega} \right)$ with radius:
+
+$$
+R = \sqrt{\left(\frac{v_{x0}}{\omega}\right)^2 + \left(\frac{v_{y0}}{\omega}\right)^2} = \frac{\sqrt{v_{x0}^2 + v_{y0}^2}}{\omega} = \frac{v_\perp}{\omega}
+$$
+
+where $v_\perp = \sqrt{v_{x0}^2 + v_{y0}^2}$ is the speed in the $xy$-plane. The radius is the gyroradius (or Larmor radius), and the particle rotates with angular frequency $\omega = \frac{q B}{m}$.
+
+Since $z(t) = 0$, the motion is purely circular in the $xy$-plane.
+
+#### Final Solution
+The position of the particle as a function of time is:
+
+$$
+\begin{align*}
+x(t) &= x_0 + \frac{v_{y0}}{\omega} (1 - \cos(\omega t)) + \frac{v_{x0}}{\omega} \sin(\omega t) \\
+y(t) &= y_0 + \frac{v_{x0}}{\omega} (\cos(\omega t) - 1) + \frac{v_{y0}}{\omega} \sin(\omega t) \\
+z(t) &= 0
+\end{align*}
+$$
+
+where $\omega = \frac{q B}{m}$, and the particle moves in a circular path in the $xy$-plane with radius $R = \frac{v_\perp}{\omega}$, centered at $\left( x_0 + \frac{v_{y0}}{\omega}, y_0 - \frac{v_{x0}}{\omega} \right)$.
+
+## Electric Potential
+
+The electric field genereted by a point charge $q$ at a distance $r$ from the charge is given by:
+
+$$
+\mathbf{E} = \frac{1}{4\pi\epsilon_0} \frac{q}{r^2} \hat{r}
+$$
+
+it easy to see that it can be rewritten as:
+
+$$
+\begin{align*}
+\mathbf{E} &= - \hat i \frac{\partial}{\partial x} \left(\frac{1}{4\pi\epsilon_0} \frac{q}{r}\right)
+ - \hat j \frac{\partial}{\partial y} \left(\frac{1}{4\pi\epsilon_0} \frac{q}{r}\right)
+ - \hat k \frac{\partial}{\partial z} \left(\frac{1}{4\pi\epsilon_0} \frac{q}{r}\right)\\
+&=\left(\frac{\partial}{\partial x} , \frac{\partial}{\partial y} , \frac{\partial}{\partial z}\right) \left(\frac{1}{4\pi\epsilon_0} \frac{q}{r}\right)\\
+&=\nabla \left(\frac{1}{4\pi\epsilon_0} \frac{q}{r}\right)
+\end{align*}
+$$
+
+This means that the electric field can be expressed as the negative gradient of a scalar function, which is called the electric potential $V$:
+
+$$
+V = \frac{1}{4\pi\epsilon_0} \frac{q}{r}
+$$
+
+The electric potential is a scalar quantity that represents the potential energy per unit charge at a point in space due to an electric field. It is defined as the work done in bringing a unit positive charge from infinity to that point against the electric field. The electric potential due to a point charge $q$ at a distance $r$ from the charge is given by:
+
+$$
+\begin{align*}
+W &=\int_{\infty}^{r} (-\mathbf{F}) \cdot d\mathbf{r} \\
+&= \int_{r}^{\infty} \mathbf{F} \cdot d\mathbf{r} \\
+&= \int_{r}^{\infty} q\mathbf{E} \cdot d\mathbf{r} \\
+&= q\int_{r}^{\infty} \mathbf{E} \cdot d\mathbf{r} \\
+&= q\int_{r}^{\infty} \left(-\nabla V\right) \cdot d\mathbf{r} \\
+&= -q\int_{r}^{\infty} \nabla V \cdot d\mathbf{r} \\
+&= -q\left(V(\infty) - V(r)\right) \\
+&= -q\left(0 - \frac{1}{4\pi\epsilon_0} \frac{q}{r}\right) \\
+&= \frac{q^2}{4\pi\epsilon_0 r}
+\end{align*}
+$$
+
+where $\mathbf{F}$ is the force acting on the charge $q$ due to the electric field $\mathbf{E}$. The negative sign indicates that work is done against the electric field when bringing a positive charge from infinity to a point in the field.
+
+## Condensator
+
+A capacitor is a device that stores electric charge and energy in an electric field. It consists of two conductive plates separated by an insulating material (dielectric). The capacitance $C$ of a capacitor is defined as the ratio of the charge $Q$ stored on one plate to the potential difference $V$ between the plates:
+
+$$
+C = \frac{Q}{V}
+$$
+
+### Energy Stored in a Capacitor
+
+Now we will see how to calculate the energy stored in a capacitor. The energy $U$ stored in a capacitor is given by:
+
+$$
+W=\int_{0}^{Q} V \, dq=\int_{0}^{Q} \frac{q}{C} \, dq = \frac{1}{2} \frac{Q^2}{C}=\frac{1}{2} CV^2
+$$

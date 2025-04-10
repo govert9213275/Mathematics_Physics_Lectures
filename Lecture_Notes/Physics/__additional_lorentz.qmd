@@ -57,9 +57,9 @@ def lorentz_force(state, t, q, m, E_field, B_field):
     az = Fz / m
     return [vx, vy, vz, ax, ay, az]
 
-def plot_lorentz_motion(q=1.6e-19, m=9.1e-31, E_field=None, B_field=None,
+def plot_lorentz_motion(q=1, m=1, E_field=None, B_field=None,
                        initial_conditions=[0, 0, 0, 1, 0, 0], 
-                       t_range=(0, 1e-6), num_points=1000):
+                       t_range=(0, 1), num_points=1000):
     # Domyślne pola
     if E_field is None:
         E_field = lambda x, y, z: (0, 0, 0)
