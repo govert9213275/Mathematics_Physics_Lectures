@@ -1,0 +1,1 @@
+pandoc ./Problem_set_EC.md -o Problem_set_EC.html  --embed-resources --standalone --metadata title="Problem set"

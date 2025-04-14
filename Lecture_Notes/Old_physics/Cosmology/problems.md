@@ -1,0 +1,1 @@
+- uzasadnij słowo albo nazwę planety podając mechanizm ich ruchu jako uzasadnienie dla nazwy

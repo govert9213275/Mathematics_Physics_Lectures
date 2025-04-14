@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.1"
+   width="677"
+   height="269"
+   id="svg2">
+  <metadata
+     id="metadata78">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <g
+       id="portatore_positivo">
+      <path
+         d="M 0,0.7 H 40 V 4 l 8,-4 -8,-4 v 3.3 H 0 z"
+         id="path7"
+         style="fill:#ff0000" />
+      <circle
+         cx="0"
+         cy="0"
+         r="10"
+         id="circle9"
+         style="fill:#ff7777;stroke:#ff0000;stroke-width:1.5" />
+      <path
+         d="M 1,1 H 5 V -1 H 1 v -4 h -2 v 4 h -4 v 2 h 4 v 4 h 2 z"
+         id="path11" />
+    </g>
+    <g
+       id="portatore_negativo">
+      <path
+         d="M 0,0.7 H -40 V 4 l -8,-4 8,-4 v 3.3 H 0 z"
+         id="path14"
+         style="fill:#0000ff" />
+      <circle
+         cx="0"
+         cy="0"
+         r="10"
+         id="circle16"
+         style="fill:#7777ff;stroke:#0000ff;stroke-width:1.5" />
+      <path
+         d="M 4,1 V -1 H -4 V 1 z"
+         id="path18" />
+    </g>
+    <path
+       d="m 50,10 a 25,50 0 0 1 0,100 h 450 a 25,50 0 0 1 0,-100 z"
+       id="conduttore_sotto"
+       style="fill:#dddddd;fill-opacity:0.2;stroke:#000000;stroke-width:0.5" />
+    <g
+       id="conduttore_sopra">
+      <path
+         d="m 50,10 a 25,50 0 0 0 0,100 h 450 a 25,50 0 0 0 0,-100 z"
+         id="path22"
+         style="fill:#dddddd;fill-opacity:0.2;stroke:#000000;stroke-width:2" />
+      <path
+         d="m 500,10 a 25,50 0 0 0 0,100"
+         id="path24"
+         style="fill:none;stroke:#000000;stroke-width:2" />
+      <path
+         d="M 500,72 H 630 V 82 L 674,60 630,38 V 48 H 500 l 4,4 -4,4 4,4 -4,4 4,4 z"
+         id="path26"
+         style="fill:#ff0000" />
+    </g>
+  </defs>
+  <g
+     transform="translate(-10.023204,5)"
+     id="g3055">
+    <use
+       id="use28"
+       x="0"
+       y="0"
+       width="700"
+       height="260"
+       xlink:href="#conduttore_sotto" />
+    <use
+       id="use30"
+       x="166"
+       y="88"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use32"
+       x="345"
+       y="55"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use34"
+       x="228"
+       y="69"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use36"
+       x="301"
+       y="79"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use38"
+       x="379"
+       y="34"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use40"
+       x="97"
+       y="64"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use42"
+       x="162"
+       y="51"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use44"
+       x="417"
+       y="83"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use46"
+       x="255"
+       y="31"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use48"
+       x="123"
+       y="29"
+       width="700"
+       height="260"
+       xlink:href="#portatore_positivo" />
+    <use
+       id="use50"
+       x="0"
+       y="0"
+       width="700"
+       height="260"
+       xlink:href="#conduttore_sopra" />
+    <use
+       id="use52"
+       x="0"
+       y="140"
+       width="700"
+       height="260"
+       xlink:href="#conduttore_sotto" />
+    <use
+       id="use54"
+       x="417"
+       y="218"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use56"
+       x="233"
+       y="187"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use58"
+       x="147"
+       y="222"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use60"
+       x="307"
+       y="174"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use62"
+       x="256"
+       y="221"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use64"
+       x="456"
+       y="170"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use66"
+       x="385"
+       y="195"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use68"
+       x="344"
+       y="230"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use70"
+       x="132"
+       y="172"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use72"
+       x="176"
+       y="200"
+       width="700"
+       height="260"
+       xlink:href="#portatore_negativo" />
+    <use
+       id="use74"
+       x="0"
+       y="140"
+       width="700"
+       height="260"
+       xlink:href="#conduttore_sopra" />
+  </g>
+</svg>
