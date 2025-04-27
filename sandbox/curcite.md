@@ -111,6 +111,56 @@ graph LR
     R12345-->B-((B-))
 ```
 
+### Case 2
+
+#### Initial
+
+```mermaid
+graph LR
+    B+((B+))-->R1
+    R1 --> R2
+    R1 --> R3
+    R2 --> o1((o))
+    R3 --> o1    
+    o1 --> R4
+    o1 --> R5
+    R4 --> B-((B-))
+    R5 --> B-((B-))
+```
+
+To be more consistent, we should draw
+
+```mermaid
+graph LR
+    B+((B+))-->o1((o))
+    o1 --> R1
+    R1 --> o2((o))
+    o2 --> R2
+    o2 --> R3
+    R2 --> o3((o))
+    R3 --> o3    
+    o3 --> R4
+    o3 --> R5
+    R4 --> o4((o))
+    R5 --> o4((o))
+    o4 --> B-((B-))
+```
+
+Instead representing the resitors as nodes, we can represent them as edges. This way, we can reduce the complexity of the graph.
+
+
+
+```mermaid
+graph LR
+    B+((B+))-->|R1|o1((o))
+    o1-->|R2|o2((o))
+    o1-->|R3|o2
+    o2-->|R4|o3((o))
+    o2-->|R5|o3
+    o3-->B-((B-))
+```
+
+
 ## Other representations
 
 ### Initial
