@@ -161,29 +161,83 @@ graph LR
 ```
 
 
-## Other representations
+## Building blocks
 
-### Initial
-
-```mermaid
-graph LR
-    B+((B+))-->R1
-    B+-->R2
-    R2-->R3
-    R3-->R4
-    R1-->R4
-    R4-->R5
-    R5-->B-((B-))
-```
-
+### Series configuration
 
 ```mermaid
 graph LR
-    B+((B+))-->|O|R1
-    B+-->|O|R2
-    R2-->|O|R3
-    R3-->|O|R4
-    R1-->|O|R4
-    R4-->|O|R5
-    R5-->|O|B-((B-))
+    style o2 fill:#ff0000
+    style o1 fill:#00ff00
+    style o3 fill:#00ff00
+    I1(I1)-->o1
+    ... -->o1
+    In(In)-->o1
+    o1((o1))-->R1
+    R1-->o2((o2))
+    o2-->R2
+    R2-->o3((o3))
+    o3-->D1(D1)
+    o3-->.,.
+    o3-->D4(D4)
 ```
+
+Can be replaced by
+
+```mermaid
+graph LR
+    style o1 fill:#00ff00
+    style o3 fill:#00ff00
+    I1(I1)-->o1
+    ... -->o1
+    In(In)-->o1
+    o1((o1))-->R12
+    R12-->o3((o3))
+    o3-->D1(D1)
+    o3-->.,.
+    o3-->Dm(Dm)
+```
+
+How find this situation?
+1. Find the first node with degree 2 (`o2`)
+2. Find the nodes to which it is connected: `o1` and `o3`
+3. Remove edge `o1-o2` and `o2-o3`
+4. Add edge `o1-o3` with the new resistance `R12 = R1 + R2`
+
+### Parallel configuration
+
+```mermaid
+graph LR
+    style o1 fill:#00ff00
+    style o3 fill:#00ff00
+    I1(I1)-->o1
+    ... -->o1
+    In(In)-->o1
+    o1((o1))-->R1
+    R1-->o3
+    o1-->R2
+    R2-->o3((o3))
+    o3-->D1(D1)
+    o3-->.,.
+    o3-->D4(D4)
+```
+
+Can be replaced by
+
+```mermaid
+graph LR
+    style o1 fill:#00ff00
+    style o3 fill:#00ff00
+    I1(I1)-->o1
+    ... -->o1
+    In(In)-->o1
+    o1((o1))-->R12
+    R12-->o3((o3))
+    o3-->D1(D1)
+    o3-->.,.
+    o3-->Dm(Dm)
+```
+How find this situation?
+1. Find two edges with the same start and end nodes (`o1` and `o3`)
+2. Remove the edges `o1-o3` with label `R1` and `R2`
+3. Add edge `o1-o3` with the new resistance `R12 = R1*R2/(R1 + R2)`
