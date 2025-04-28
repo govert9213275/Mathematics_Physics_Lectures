@@ -152,7 +152,8 @@ Instead representing the resitors as nodes, we can represent them as edges. This
 
 ```mermaid
 graph LR
-    B+((B+))-->|R1|o1((o))
+    B+((B+))-->o0((o))
+    o0-->|R1|o1((o))
     o1-->|R2|o2((o))
     o1-->|R3|o2
     o2-->|R4|o3((o))
