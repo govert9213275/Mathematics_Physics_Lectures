@@ -7,7 +7,7 @@ format:
     toc-depth: 4
     highlight-style: tango
     code-line-numbers: true
-    code-fold: show
+    code-fold: true
     code-summary: "Show the code"
     code-tools: true
     code-block-bg: "rgba(42, 174, 42, 0.02)"
@@ -38,6 +38,129 @@ Measurement is the process of determining the size, length, or amount of somethi
 - **Accuracy** is the degree to which a measurement is close to the true value of the quantity being measured. It is a measure of how well the measurement reflects the actual physical quantity.
 
 - **Precision** is the degree to which repeated measurements of the same quantity give consistent results. It is a measure of the reproducibility and consistency of the measurement process.
+
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
+import matplotlib.gridspec as gridspec
+
+# Set random seed for reproducibility
+np.random.seed(42)
+
+# Function to generate shots with different accuracy and precision patterns
+def generate_shots(n_shots=50, center=(0, 0), 
+                  accuracy_offset=(0, 0), 
+                  precision_factor=1.0):
+    """
+    Generate simulated shots for target practice
+    
+    Parameters:
+    - n_shots: number of shots to generate
+    - center: true target center (x, y)
+    - accuracy_offset: how far off the average is from true center (x, y)
+    - precision_factor: standard deviation controlling spread (lower = better precision)
+    """
+    # Apply accuracy offset to the center
+    biased_center = (center[0] + accuracy_offset[0], center[1] + accuracy_offset[1])
+    
+    # Generate random points around the biased center with given precision
+    x = np.random.normal(biased_center[0], precision_factor, n_shots)
+    y = np.random.normal(biased_center[1], precision_factor, n_shots)
+    
+    return x, y
+
+# Create figure with subplots
+plt.figure(figsize=(14, 10))
+gs = gridspec.GridSpec(2, 2, width_ratios=[1, 1], height_ratios=[1, 1])
+
+# Define scenarios to visualize
+scenarios = [
+    {"title": "High Accuracy, High Precision", 
+     "accuracy_offset": (0.5, 0.5), 
+     "precision_factor": 0.5},
+    
+    {"title": "Low Accuracy, High Precision", 
+     "accuracy_offset": (3.0, -2.0), 
+     "precision_factor": 0.5},
+    
+    {"title": "High Accuracy, Low Precision", 
+     "accuracy_offset": (0.5, 0.5), 
+     "precision_factor": 2.0},
+    
+    {"title": "Low Accuracy, Low Precision", 
+     "accuracy_offset": (3.0, -2.0), 
+     "precision_factor": 2.0}
+]
+
+# Draw target and shots for each scenario
+for i, scenario in enumerate(scenarios):
+    ax = plt.subplot(gs[i])
+    
+    # Draw target rings
+    for r in [5, 4, 3, 2, 1]:
+        circle = Circle((0, 0), r, fill=False, edgecolor='black', linewidth=1)
+        ax.add_patch(circle)
+    
+    # Generate and plot shots
+    x, y = generate_shots(
+        n_shots=50, 
+        center=(0, 0), 
+        accuracy_offset=scenario["accuracy_offset"], 
+        precision_factor=scenario["precision_factor"]
+    )
+    
+    # Calculate mean position (center of mass) of shots
+    mean_x, mean_y = np.mean(x), np.mean(y)
+    
+    # Plot individual shots
+    ax.scatter(x, y, color='blue', alpha=0.6, s=30, label='Shots')
+    
+    # Plot true center and observed mean
+    ax.scatter(0, 0, color='red', s=100, marker='+', label='True Center')
+    ax.scatter(mean_x, mean_y, color='green', s=100, marker='x', label='Shot Mean')
+    
+    # Draw line from true center to mean (showing accuracy vector)
+    ax.arrow(0, 0, mean_x, mean_y, color='red', width=0.05, head_width=0.3, alpha=0.7,
+             length_includes_head=True)
+    
+    # Configure plot
+    ax.set_xlim(-7, 7)
+    ax.set_ylim(-7, 7)
+    ax.set_aspect('equal')
+    ax.grid(True, linestyle='--', alpha=0.7)
+    ax.set_title(scenario["title"], fontsize=12)
+    
+    # Add accuracy and precision information
+    accuracy_distance = np.sqrt(scenario["accuracy_offset"][0]**2 + scenario["accuracy_offset"][1]**2)
+    precision_value = scenario["precision_factor"]
+    
+    # Calculate actual measured accuracy and precision from data
+    actual_accuracy = np.sqrt(mean_x**2 + mean_y**2)  # Distance from true center to mean
+    actual_precision = np.mean(np.sqrt((x - mean_x)**2 + (y - mean_y)**2))  # Average distance to mean
+    
+    info_text = f"Accuracy: {'High' if accuracy_distance < 2 else 'Low'}\nPrecision: {'High' if precision_value < 1 else 'Low'}"
+    stats_text = f"Accuracy measure: {actual_accuracy:.2f}\nPrecision measure: {actual_precision:.2f}"
+    
+    ax.text(0.05, 0.95, info_text, transform=ax.transAxes, 
+            verticalalignment='top', bbox={'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.5})
+    ax.text(0.05, 0.80, stats_text, transform=ax.transAxes, 
+            verticalalignment='top', bbox={'boxstyle': 'round', 'facecolor': 'lightblue', 'alpha': 0.5})
+
+# Add a legend to the last subplot
+handles, labels = ax.get_legend_handles_labels()
+plt.figlegend(handles, labels, loc='lower center', ncol=3, bbox_to_anchor=(0.5, 0.05))
+
+# Add overall title
+plt.suptitle('Target Shooting: Visualizing Accuracy vs Precision', fontsize=16, y=0.98)
+plt.subplots_adjust(bottom=0.15, wspace=0.2, hspace=0.3)
+
+
+plt.tight_layout(rect=[0, 0.12, 1, 0.95])
+plt.savefig('accuracy_vs_precision_target.png', dpi=300, bbox_inches='tight')
+plt.show()
+```
 
 ### Why do we measure? 
 
@@ -95,27 +218,37 @@ All other units are derived from these base units. For example, the unit of forc
 
 ### Difference between Error and Uncertainty
 
-- **Error** is the difference between a measured value and the true value. It can be caused by a variety of factors, including limitations of measuring instruments, the nature of the physical quantity being measured, and the presence of random errors in the measurement process. Errors can be reduced by calibrating instruments, using multiple measurements, and applying correction factors.
+- **Error** is the difference between a measured value and the true value. It can arise from various factors, such as limitations of measuring instruments, the nature of the physical quantity being measured, or random errors in the measurement process. Errors can be reduced by calibrating instruments, taking multiple measurements, and applying correction factors.
 
-- **Uncertainty** is a measure of the range of values within which the true value of a measurement is likely to lie. It is a more general concept than error and includes both systematic and random errors. Uncertainty can be estimated using statistical methods, such as the standard deviation of a set of measurements, or by using the total derivative to estimate the uncertainty in a measurement due to uncertainties in the variables that affect it.
+- **Uncertainty** is a measure of the range of values within which the true value of a measurement is likely to lie. It is a broader concept than error, encompassing both systematic errors (consistent, e.g., due to a faulty instrument) and random errors (variable, due to chance). Uncertainty can be estimated using statistical methods, such as the standard deviation of a set of measurements, or by using the total derivative to assess the uncertainty in a measurement due to uncertainties in the variables affecting it.
+
+### Relationship between error and uncertainty
+
+**Error** refers to the specific difference between a measured value and the true value, which can be systematic (consistent, e.g., caused by an inaccurate instrument) or random (variable, due to unpredictable factors). 
+
+
+**Uncertainty**, on the other hand, is a more comprehensive concept that quantifies the range within which the true value is likely to lie, taking into account all possible sources of error (systematic and random) as well as other factors, such as variability in measurement conditions or limitations of the measurement method. 
+
+
+**Errors contribute to uncertainty**, but uncertainty is broader because it includes not only errors but also the overall imprecision of the measurement process. While errors can be minimized (e.g., through calibration or improved techniques), uncertainty is always present to some extent, as it is impossible to eliminate all sources of inaccuracy. In summary, error is a specific deviation in a measurement, while uncertainty is an estimate of the range of possible values around the measured result, reflecting the combined impact of errors and other influencing factors.
 
 ### Scheme of presenting uncertainty
 
-Quantity = Value $\pm$ Uncertainity [Units]
+*Quantity = Value $\pm$ Uncertainity [Units]*
 
 **Example:**
 
-Resistance = $R \pm \Delta R = 10.0 \pm  0.1~~[Ohm]$
+*Resistance = $R \pm \Delta R = 10.0 \pm  0.1 [Ohm]$*
 
 ### Uncertainty of devices and measurements
 
-Measurement devices have a resolution, which is the smallest change in the quantity being measured that the device can detect. The uncertainty in a measurement made with a device is typically (and on our course) **half of the resolution of the device**. 
+Measurement devices have a **resolution**, which is the smallest change in the quantity being measured that the device can detect. The uncertainty in a measurement made with a device is typically (and on our course) **half of the resolution of the device**. 
 
-For example, if a ruler has a resolution of 1 mm, by having markings every 1 mm, the uncertainty in a measurement made with the ruler is 0.5 mm. This is because the true value of the quantity being measured could be anywhere within the range of the resolution of the device.
+**Example 1**: If a ruler has a resolution of ***1 mm***, by having markings every 1 mm, the uncertainty in a measurement made with the ruler is ***0.5 mm***. This is because the true value of the quantity being measured could be anywhere within the range of the resolution of the device.
 
-If the watch with markings every 1 minute shows 12:00, it means that the true time is between 11:59:30 and 12:00:30. 
+**Example 2**: If the watch with markings every ***1 minute*** shows ***12:00***, it means that the true time is between ***11:59:30*** and ***12:00:30***. 
 
-Other example lets take voltmeter with resolution of 0.1 V. If the voltmeter shows 96.6 V, the true value of the voltage is between 96.55 and 96.65 V. One can write it as 96.6 V $\pm$ 0.05 V.
+**Example 3**: Other example lets take voltmeter with resolution of ***0.1 V***. If the voltmeter shows ***96.6 V***, the true value of the voltage is between ***96.55*** and ***96.65 V***. One can write it as ***96.6 V $\pm$ 0.05 V***.
 
 ### Total derivative
 
@@ -138,20 +271,24 @@ In the context of measurement, the total derivative can be used to quantify the 
 
 To estimate the uncertainty in measurement using the total derivative , you can follow these steps:
 
-1. Identify the physical quantity that you want to measure and the variables that affect it.
+**Step 1**. Identify the physical quantity that you want to measure and the variables that affect it.
 
-2. Determine the uncertainties in the variables that affect the physical quantity.
+**Step 2**. Determine the uncertainties in the variables that affect the physical quantity.
 
-3. Calculate the total derivative of the physical quantity with respect to the variables that affect it.
+**Step 3**. Calculate the total derivative of the physical quantity with respect to the variables that affect it.
 
-4. Use the total derivative to estimate the uncertainty in the physical quantity due to uncertainties in the variables.
+**Step 4**. Use the total derivative to estimate the uncertainty in the physical quantity due to uncertainties in the variables.
  
 For example, if a physical quantity $f(x,y)$ is a function of variables x and y, then the total derivative of $f$ with respect to $x$ and $y$ can be used to estimate the uncertainty in $f$ due to uncertainties in $x$ and $y$ (i.e. $\Delta x$ and $\Delta y$).
 
-$$\Delta f(x,y) = \left| \frac{\partial f}{\partial x} \Delta x \right| + \left|\frac{\partial f}{\partial y} \Delta y \right|\qquad \qquad\text{University formula}
+#### University formula
+
+$$\Delta f(x,y) = \left| \frac{\partial f}{\partial x} \Delta x \right| + \left|\frac{\partial f}{\partial y} \Delta y \right|
 $$
 
-$$\Delta f(x,y) = \sqrt{(\frac{\partial f}{\partial x} \Delta x)^2 + (\frac{\partial f}{\partial y} \Delta y)^2}\qquad\text{Engineering formula (use this one!)}
+#### Engineering formula (use this one!)
+
+$$\Delta f(x,y) = \sqrt{(\frac{\partial f}{\partial x} \Delta x)^2 + (\frac{\partial f}{\partial y} \Delta y)^2}
 $$
 
 **Uncertainty** is an unavoidable aspect of measurement in physics and other sciences. It arises from a variety of sources, including the limitations of measuring instruments, the nature of the physical quantity being measured, and the presence of random errors in the measurement process.
@@ -287,7 +424,6 @@ The **standard deviation** of the N measurements is given by:
 
 $$\Delta x = \sqrt{\frac{1}{N-1} \sum_{n=1}^{N} (x_n - \bar x)^2} $$
 
-The standard deviation is a measure of the spread or dispersion of the measurements around the average value. A small standard deviation indicates that the measurements are close to the average value, while a large standard deviation indicates that the measurements are spread out over a wider range of values.
 
 Mean of the measurements is the average value of the measurements, while the standard deviation is a measure of the spread or dispersion of the measurements around the mean value. The standard deviation is a measure of the uncertainty in the measurements and can be used to estimate the error in the average value.
 
