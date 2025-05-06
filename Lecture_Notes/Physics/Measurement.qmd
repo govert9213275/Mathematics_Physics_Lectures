@@ -174,6 +174,14 @@ plt.show()
 
 Measurement is essential in physics and other sciences because it allows us to describe and understand the physical world. Without measurement, we would not be able to quantify physical quantities, compare different objects or events, or make predictions about the behavior of the natural world.
 
+```{mermaid}
+flowchart TD
+    A[Measurements] --> B[Mathematical Model]
+    B --> C[Measurements]
+    C --> D[Predictions about the future]
+```
+
+
 ### Units of measurement
 
 To make meaningful measurements, we need to use standardized units of measurement (SI units). These units are defined by international agreements and are used by scientists around the world. 
@@ -198,21 +206,37 @@ All other units are derived from these base units. For example, the unit of forc
 
 **Examples of derived units in physics include:**
 
-- Acceleration: $[\frac{m}{s^2}]$
+- Acceleration: $[\frac{m}{s^2}]$  
 
-- Force: Newton $[N]=[\frac{kg\,m}{s^2}]$
+$$a = \frac{d v}{d t}$$
 
-- Energy: Joule $[J]=[\frac{kg\,m^2}{s^2}]$
+- Force: Newton $[N]=[\frac{kg\,m}{s^2}]$ 
 
-- Power: Watt $[W]=[\frac{J}{s}]=[\frac{kg\,m^2}{s^3}]$
+$$F = ma$$
 
-- Pressure: Pascal $[Pa]=[\frac{N}{m^2}]=[\frac{kg}{m\,s^2}]$
+- Energy: Joule $[J]=[\frac{kg\,m^2}{s^2}]$ 
 
-- Electric charge: Coulomb $[C]=[A s]$
+$$W = F \cdot d$$
 
-- Electric potential: Volt $[V]=[\frac{J}{C}]=[\frac{kg\,m^2}{A\,s^3}]$
+- Power: Watt $[W]=[\frac{J}{s}]=[\frac{kg\,m^2}{s^3}]$ 
 
-- Electric resistance: Ohm $[\Omega]=[\frac{V}{A}]=[\frac{kg\,m^2}{A^2\,s^3}]$
+$$P = \frac{W}{t}$$
+
+- Pressure: Pascal $[Pa]=[\frac{N}{m^2}]=[\frac{kg}{m\,s^2}]$ 
+
+$$P = \frac{F}{A}$$
+
+- Electric charge: Coulomb $[C]=[A s]$ 
+
+$$Q = I \cdot t$$
+
+- Electric potential: Volt $[V]=[\frac{J}{C}]=[\frac{kg\,m^2}{A\,s^3}]$ 
+
+$$V = \frac{W}{Q}$$
+
+- Electric resistance: Ohm $[\Omega]=[\frac{V}{A}]=[\frac{kg\,m^2}{A^2\,s^3}]$ 
+
+$$R = \frac{V}{I}$$
 
 ## Uncertainty in measurement
 
@@ -349,8 +373,6 @@ In this case it would be $$\Delta V/V \times 100 \%  =2772/38808 \times 100 \% \
 Similarly, relative uncertainty can be written as 
 
 $$\Delta V/V = 2772/38808 \approx 0.07.$$
-
-Here’s an improved and slightly reorganized version of your markdown notes:
 
 
 ### Example 2
