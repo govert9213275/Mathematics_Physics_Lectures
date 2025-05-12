@@ -122,8 +122,50 @@ Monte Carlo simulation allows us to approximate probabilities by performing rand
 
 ### Example: Estimating the Probability of Rolling a Sum Greater Than 8 with Two Dice
 
-#### Analytical Solution
-The total number of outcomes when rolling two dice can be calculated programmatically. The favorable outcomes for a sum greater than 8 can also be determined directly:
+### **Analytical Solution**  
+
+To estimate the probability of rolling a sum greater than **8** with two fair six-sided dice, follow these steps:  
+
+#### **1. Define the Sample Space**  
+
+- Each die has **6** faces, so the total number of possible outcomes when rolling two dice is: $6 \times 6 = 36$  
+
+- The complete set of possible outcomes is:  
+
+$$
+\begin{array}{cccccc}
+(1,1) & (1,2) & (1,3) & (1,4) & (1,5) & (1,6) \\
+(2,1) & (2,2) & (2,3) & (2,4) & (2,5) & (2,6) \\
+(3,1) & (3,2) & (3,3) & (3,4) & (3,5) & (3,6) \\
+(4,1) & (4,2) & (4,3) & (4,4) & (4,5) & (4,6) \\
+(5,1) & (5,2) & (5,3) & (5,4) & (5,5) & (5,6) \\
+(6,1) & (6,2) & (6,3) & (6,4) & (6,5) & (6,6) \\
+\end{array}
+$$  
+
+#### **2. Identify Favorable Outcomes**  
+
+Determine all pairs $(d_1, d_2)$ where the sum $d_1 + d_2 > 8$.  
+
+#### **3. Count the Favorable Outcomes**  
+
+Enumerate all combinations that meet the condition:  
+
+$$
+\begin{array}{llllll}
+(3,6) & (4,5) & (4,6) & (5,4) & (5,5) & (5,6) \\
+(6,3) & (6,4) & (6,5) & (6,6) \\
+\end{array}
+$$  
+
+Total favorable outcomes: **10**  
+
+#### **4. Calculate the Probability**  
+The probability $P$ of rolling a sum greater than **8** is:  
+
+$$
+P(\text{Sum} > 8) = \frac{\text{Number of favorable outcomes}}{\text{Total possible outcomes}} = \frac{10}{36} \text{or} \ 27.78\%
+$$  
 
 ```{python}
 from itertools import product
@@ -191,6 +233,7 @@ P(X = k) = \binom{n}{k} p^k (1 - p)^{n - k},
 $$
 
 where:
+
 - $n$ is the number of trials (10 in this case),
 - $k$ is the number of successes (7 heads),
 - $p$ is the probability of success for a single trial (0.5 for a fair coin).
@@ -303,7 +346,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import binom
 
 # Number of simulations
-n_simulations = 10_000
+n_simulations = 100_000
 
 # Simulate Binomial distribution by counting successes in n trials
 n_trials = 10
@@ -724,12 +767,14 @@ g = (4 * np.pi ** 2 * L) / T ** 2
 mean_g = np.mean(g)
 std_g = np.std(g)
 
+print(f"Estimated Acceleration Due to Gravity (g): {mean_g:.2f} ± {std_g:.2f} m/s^2")
+
 # histogram of g
 plt.figure(figsize=(10, 6))
 plt.hist(g, bins=50, color='skyblue', edgecolor='black', alpha=0.7)
 plt.axvline(mean_g, color='red', linestyle='--', label=f'Mean: {mean_g:.2f}')
-plt.axvline(mean_g - std_g, color='green', linestyle='--', label=f'Std Dev: {std_g:.2f}')
-plt.axvline(mean_g + std_g, color='green', linestyle='--')
+plt.axvline(mean_g - 2*std_g, color='green', linestyle='--', label=f'Std Dev: 2*{std_g:.2f}')
+plt.axvline(mean_g + 2*std_g, color='green', linestyle='--')
 plt.title("Acceleration Due to Gravity (g) Distribution")
 plt.xlabel("Acceleration Due to Gravity (m/s^2)")
 plt.ylabel("Frequency")
