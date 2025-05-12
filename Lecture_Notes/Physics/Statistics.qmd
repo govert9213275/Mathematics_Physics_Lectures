@@ -767,7 +767,7 @@ g = (4 * np.pi ** 2 * L) / T ** 2
 mean_g = np.mean(g)
 std_g = np.std(g)
 
-print(f"Estimated Acceleration Due to Gravity (g): {mean_g:.2f} ± {std_g:.2f} m/s^2")
+print(f"Estimated Acceleration Due to Gravity (g): {mean_g:.2f} ± {2*std_g:.2f} m/s^2")
 
 # histogram of g
 plt.figure(figsize=(10, 6))
